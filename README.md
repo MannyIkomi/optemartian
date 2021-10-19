@@ -1,4 +1,4 @@
-# Martian: Markdown to Notion Parser
+# Optemartian: Fork of Martian, a Markdown to Notion Parser
 
 > Convert Markdown and GitHub Flavoured Markdown to Notion API Blocks and RichText
 
