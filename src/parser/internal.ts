@@ -80,28 +80,25 @@ function parseList(
 )[] {
   return element.children.flatMap(item => {
     const paragraph = item.children[0];
-    if(paragraph){
+    if (paragraph) {
+      if (paragraph.type !== 'paragraph') {
+        return [] as (
+          | notion.BulletedListItemBlock
+          | notion.NumberedListItemBlock
+          | notion.ToDoBlock
+        )[];
+      }
 
-          if (paragraph.type !== 'paragraph') {
-      return [] as (
-        | notion.BulletedListItemBlock
-        | notion.NumberedListItemBlock
-        | notion.ToDoBlock
-      )[];
-    }
-        
-        const text = paragraph.children.flatMap(child => parseInline(child));
-        if (element.start !== null && element.start !== undefined) {
-            return [notion.numberedListItem(text)];
-        }
-        else if (item.checked !== null && item.checked !== undefined) {
-            return [notion.toDo(item.checked, text)];
-        }
-        else {
-            return [notion.bulletedListItem(text)];
-        }   
+      const text = paragraph.children.flatMap(child => parseInline(child));
+      if (element.start !== null && element.start !== undefined) {
+        return [notion.numberedListItem(text)];
+      } else if (item.checked !== null && item.checked !== undefined) {
+        return [notion.toDo(item.checked, text)];
+      } else {
+        return [notion.bulletedListItem(text)];
+      }
     } else {
-        return [];
+      return [];
     }
   });
 }
