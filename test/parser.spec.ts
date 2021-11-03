@@ -105,20 +105,19 @@ describe('gfm parser', () => {
   });
 
   it('should parse code block', () => {
-    const ast = md.root(
-      md.paragraph(md.text('hello')),
-      md.code('public class Foo {}', 'java')
-    );
+    const ast = md.root(md.code('public class Foo {}', 'java'));
 
     const actual = parseBlocks(ast);
 
     const expected = [
-      notion.paragraph([notion.richText('hello')]),
-      notion.paragraph([
-        notion.richText('public class Foo {}', {
-          annotations: {code: true},
-        }),
-      ]),
+      notion.code(
+        [
+          notion.richText('public class Foo {}', {
+            annotations: {code: true},
+          }),
+        ],
+        'java'
+      ),
     ];
 
     expect(actual).toStrictEqual(expected);

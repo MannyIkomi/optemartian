@@ -6,8 +6,30 @@ import type {
   NumberedListItemBlock,
   ParagraphBlock,
   RichText,
+  BlockBase,
   ToDoBlock,
 } from '@notionhq/client/build/src/api-types';
+
+export interface CodeBlock extends BlockBase {
+  type: 'code';
+  code: {
+    text: RichText[];
+  };
+  has_children: false;
+  lang: string;
+}
+
+export function code(text: RichText[], lang?: string | undefined): CodeBlock {
+  // captions?
+  return {
+    object: 'block',
+    type: 'code',
+    code: {
+      text: text,
+    },
+    lang: lang,
+  } as CodeBlock;
+}
 
 export function paragraph(text: RichText[]): ParagraphBlock {
   return {
