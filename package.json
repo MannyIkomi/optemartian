@@ -26,7 +26,8 @@
   "dependencies": {
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
-    "unified": "^9.2.1"
+    "unified": "^9.2.1",
+    "@notionhq/client": "github:MannyIkomi/notion-sdk-js#modify-sdk"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
