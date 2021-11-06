@@ -66,9 +66,9 @@ function parseHeading(
   }
 }
 
-function parseCode(element: md.Code): notion.ParagraphBlock {
-  const text = [notion.richText(element.value, {annotations: {code: true}})];
-  return notion.paragraph(text);
+function parseCode(element: md.Code): notion.CodeBlock {
+  const text = [notion.richText(element.value)];
+  return notion.code(text, element.lang);
 }
 
 function parseList(

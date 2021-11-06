@@ -110,14 +110,7 @@ describe('gfm parser', () => {
     const actual = parseBlocks(ast);
 
     const expected = [
-      notion.code(
-        [
-          notion.richText('public class Foo {}', {
-            annotations: {code: true},
-          }),
-        ],
-        'java'
-      ),
+      notion.code([notion.richText('public class Foo {}')], 'java'),
     ];
 
     expect(actual).toStrictEqual(expected);
