@@ -1,6 +1,18 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "sourceMap": true,
+    "target": "es2018",
     "lib": [
       "es2019"
     ],
