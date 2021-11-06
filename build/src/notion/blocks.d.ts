@@ -1,12 +1,4 @@
-import type { BulletedListItemBlock, HeadingOneBlock, HeadingThreeBlock, HeadingTwoBlock, NumberedListItemBlock, ParagraphBlock, RichText, BlockBase, ToDoBlock } from '../../@notionhq/client/build/src/api-types';
-export interface CodeBlock extends BlockBase {
-    type: 'code';
-    code: {
-        text: RichText[];
-    };
-    has_children: false;
-    lang: string;
-}
+import type { BulletedListItemBlock, HeadingOneBlock, HeadingThreeBlock, HeadingTwoBlock, NumberedListItemBlock, ParagraphBlock, RichText, CodeBlock, ToDoBlock } from '@notionhq/client/build/src/api-types';
 export declare function code(text: RichText[], lang?: string | undefined): CodeBlock;
 export declare function paragraph(text: RichText[]): ParagraphBlock;
 export declare function headingOne(text: RichText[]): HeadingOneBlock;

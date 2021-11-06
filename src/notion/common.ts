@@ -1,7 +1,4 @@
-import type {
-  Annotations,
-  RichText,
-} from '../../@notionhq/client/build/src/api-types';
+import type {Annotations, RichText} from '@notionhq/client/build/src/api-types';
 
 export interface RichTextOptions {
   annotations?: Partial<Annotations>;
