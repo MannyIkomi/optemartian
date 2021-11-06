@@ -8,7 +8,7 @@ import type {
   RichText,
   BlockBase,
   ToDoBlock,
-} from '@notionhq/client/build/src/api-types';
+} from '../../@notionhq/client/build/src/api-types';
 
 export interface CodeBlock extends BlockBase {
   type: 'code';
