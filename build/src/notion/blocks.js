@@ -8,8 +8,8 @@ function code(text, lang) {
         type: 'code',
         code: {
             text: text,
+            language: lang,
         },
-        lang: lang,
     };
 }
 exports.code = code;
