@@ -115,6 +115,19 @@ describe('gfm parser', () => {
 
     expect(actual).toStrictEqual(expected);
   });
+  it('should parse inline code', () => {
+    const ast = md.root(md.paragraph(md.inlineCode('public class Foo {}')));
+
+    const actual = parseBlocks(ast);
+
+    const expected = [
+      notion.paragraph([
+        notion.richText('public class Foo {}', {annotations: {code: true}}),
+      ]),
+    ];
+
+    expect(actual).toStrictEqual(expected);
+  });
 
   it('should parse block quote', () => {
     const ast = md.root(
