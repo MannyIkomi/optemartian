@@ -1,6 +1,7 @@
 import type {Annotations, RichText} from '@notionhq/client/build/src/api-types';
 
 export interface RichTextOptions {
+  type?: 'text' | 'mention' | 'equation' | string;
   annotations?: Partial<Annotations>;
   url?: string;
 }
@@ -10,9 +11,10 @@ export function richText(
   options: RichTextOptions = {}
 ): RichText {
   const annotations = options.annotations ?? {};
+  const type = options.type ?? '';
 
   return {
-    type: 'text',
+    type: type,
     annotations: {
       bold: false,
       strikethrough: false,

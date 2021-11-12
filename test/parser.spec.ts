@@ -238,4 +238,8 @@ describe('gfm parser', () => {
 
     expect(actual).toStrictEqual(expected);
   });
+
+  it('should parse slab user mentions', () => {
+    // ast
+  });
 });

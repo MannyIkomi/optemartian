@@ -24,6 +24,7 @@ const notion = __importStar(require("../notion"));
 function parseInline(element, options) {
     var _a, _b;
     const copy = {
+        type: '',
         annotations: {
             ...((_a = options === null || options === void 0 ? void 0 : options.annotations) !== null && _a !== void 0 ? _a : {}),
         },
@@ -44,6 +45,10 @@ function parseInline(element, options) {
             copy.annotations.bold = true;
             return element.children.flatMap(child => parseInline(child, copy));
         case 'link':
+            // element.url.includes()
+            if (element.url.includes('slab.discord.tools/users/')) {
+                console.log(element);
+            }
             copy.url = element.url;
             return element.children.flatMap(child => parseInline(child, copy));
         case 'inlineCode':

@@ -37,4 +37,19 @@ hello _world_
 
     expect(expected).toStrictEqual(actual);
   });
+
+  it('should convert links to RichText', () => {
+    const text =
+      'This will be a mention: [Val](https://slab.discord.tools/users/8c5e38a7)';
+    const actual = markdownToRichText(text);
+
+    const expected = [
+      notion.richText('This will be a mention: '),
+      notion.richText('Val', {
+        url: 'https://slab.discord.tools/users/8c5e38a7',
+      }),
+    ];
+
+    expect(expected).toStrictEqual(actual);
+  });
 });

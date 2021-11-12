@@ -6,6 +6,7 @@ function parseInline(
   options?: notion.RichTextOptions
 ): notion.RichText[] {
   const copy = {
+    type: '',
     annotations: {
       ...(options?.annotations ?? {}),
     },
@@ -32,6 +33,12 @@ function parseInline(
       return element.children.flatMap(child => parseInline(child, copy));
 
     case 'link':
+      // element.url.includes()
+
+      if (element.url.includes('slab.discord.tools/users/')) {
+        console.log(element);
+      }
+
       copy.url = element.url;
       return element.children.flatMap(child => parseInline(child, copy));
 

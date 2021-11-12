@@ -9,7 +9,7 @@ import type * as notion from './notion';
  * - Tables (removed)
  * - HTML tags (removed)
  * - Thematic breaks (removed)
- * - Code blocks (treated as paragraph)
+ * [x] Code blocks (treated as paragraph)
  * - Block quotes (treated as paragraph)
  *
  * Supports GitHub-flavoured Markdown.

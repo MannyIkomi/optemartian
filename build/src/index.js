@@ -18,7 +18,7 @@ const remark_gfm_1 = __importDefault(require("remark-gfm"));
  * - Tables (removed)
  * - HTML tags (removed)
  * - Thematic breaks (removed)
- * - Code blocks (treated as paragraph)
+ * [x] Code blocks (treated as paragraph)
  * - Block quotes (treated as paragraph)
  *
  * Supports GitHub-flavoured Markdown.
