@@ -37,6 +37,8 @@ exports.markdownToBlocks = markdownToBlocks;
  * @param text any inline Markdown or GFM content
  */
 function markdownToRichText(text) {
+    // intercept markdown strings here
+    // check for string including a user mention
     const root = (0, unified_1.default)().use(remark_parse_1.default).use(remark_gfm_1.default).parse(text);
     return (0, internal_1.parseRichText)(root);
 }

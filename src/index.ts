@@ -35,6 +35,9 @@ export function markdownToBlocks(body: string): notion.Block[] {
  * @param text any inline Markdown or GFM content
  */
 export function markdownToRichText(text: string): notion.RichText[] {
+  // intercept markdown strings here
+  // check for string including a user mention
+
   const root = unified().use(markdown).use(gfm).parse(text);
 
   return parseRichText(root as unknown as md.Root);
