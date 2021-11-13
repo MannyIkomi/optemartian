@@ -1,11 +1,13 @@
 import * as md from '../markdown';
 import * as notion from '../notion';
+import {findMatchingUser} from '../notion';
 
 function parseInline(
   element: md.PhrasingContent,
   options?: notion.RichTextOptions
 ): notion.RichText[] {
   const copy = {
+    type: 'text',
     annotations: {
       ...(options?.annotations ?? {}),
     },
@@ -32,8 +34,33 @@ function parseInline(
       return element.children.flatMap(child => parseInline(child, copy));
 
     case 'link':
-      copy.url = element.url;
-      return element.children.flatMap(child => parseInline(child, copy));
+      // element.url.includes()
+      if (element.url.includes('slab.discord.tools/users/')) {
+        copy.type = 'mention';
+        // fetch where link name is a notion user name
+
+        // @ts-ignores
+        const linkDisplayText = element.children[0].value;
+
+        return [
+          notion.richTextMention(
+            {
+              type: 'user',
+              user: {
+                object: 'user',
+                name: linkDisplayText,
+                id: '',
+              },
+            },
+            copy
+          ),
+        ];
+      }
+      if (!element.url.includes('slab.discord.tools/users/')) {
+        copy.url = element.url;
+        return element.children.flatMap(child => parseInline(child, copy));
+      }
+      throw new Error('Something went wrong processing links');
 
     case 'inlineCode':
       copy.annotations.code = true;
@@ -66,9 +93,9 @@ function parseHeading(
   }
 }
 
-function parseCode(element: md.Code): notion.ParagraphBlock {
-  const text = [notion.richText(element.value, {annotations: {code: true}})];
-  return notion.paragraph(text);
+function parseCode(element: md.Code): notion.CodeBlock {
+  const text = [notion.richText(element.value)];
+  return notion.code(text, element.lang);
 }
 
 function parseList(

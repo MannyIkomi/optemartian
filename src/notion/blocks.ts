@@ -6,15 +6,28 @@ import type {
   NumberedListItemBlock,
   ParagraphBlock,
   RichText,
+  CodeBlock,
   ToDoBlock,
 } from '@notionhq/client/build/src/api-types';
+
+export function code(text: RichText[], lang?: string | undefined): CodeBlock {
+  // captions?
+  return {
+    object: 'block',
+    type: 'code',
+    code: {
+      text,
+      language: lang,
+    },
+  } as CodeBlock;
+}
 
 export function paragraph(text: RichText[]): ParagraphBlock {
   return {
     object: 'block',
     type: 'paragraph',
     paragraph: {
-      text: text,
+      text,
     },
   } as ParagraphBlock;
 }
@@ -24,7 +37,7 @@ export function headingOne(text: RichText[]): HeadingOneBlock {
     object: 'block',
     type: 'heading_1',
     heading_1: {
-      text: text,
+      text,
     },
   } as HeadingOneBlock;
 }
@@ -34,7 +47,7 @@ export function headingTwo(text: RichText[]): HeadingTwoBlock {
     object: 'block',
     type: 'heading_2',
     heading_2: {
-      text: text,
+      text,
     },
   } as HeadingTwoBlock;
 }
@@ -44,7 +57,7 @@ export function headingThree(text: RichText[]): HeadingThreeBlock {
     object: 'block',
     type: 'heading_3',
     heading_3: {
-      text: text,
+      text,
     },
   } as HeadingThreeBlock;
 }
@@ -54,7 +67,7 @@ export function bulletedListItem(text: RichText[]): BulletedListItemBlock {
     object: 'block',
     type: 'bulleted_list_item',
     bulleted_list_item: {
-      text: text,
+      text,
     },
   } as BulletedListItemBlock;
 }
@@ -64,7 +77,7 @@ export function numberedListItem(text: RichText[]): NumberedListItemBlock {
     object: 'block',
     type: 'numbered_list_item',
     numbered_list_item: {
-      text: text,
+      text,
     },
   } as NumberedListItemBlock;
 }
@@ -74,7 +87,7 @@ export function toDo(checked: boolean, text: RichText[]): ToDoBlock {
     object: 'block',
     type: 'to_do',
     to_do: {
-      text: text,
+      text,
       checked: checked,
     },
   } as ToDoBlock;

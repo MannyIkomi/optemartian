@@ -24,7 +24,8 @@
   "author": "Richard Robinson",
   "license": "ISC",
   "dependencies": {
-    "@notionhq/client": "^0.1.9",
+    "@notionhq/client": "github:MannyIkomi/notion-sdk-js#modify-sdk-0.3.3",
+    "dotenv": "^10.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
     "unified": "^9.2.1"

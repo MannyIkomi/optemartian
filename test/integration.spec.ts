@@ -37,4 +37,48 @@ hello _world_
 
     expect(expected).toStrictEqual(actual);
   });
+
+  it('should convert links to RichText', () => {
+    const text = 'This will be a mention: [Val](https://some.other.link.com/)';
+    const actual = markdownToRichText(text);
+
+    const expected = [
+      notion.richText('This will be a mention: '),
+      notion.richText('Val', {
+        url: 'https://some.other.link.com/',
+      }),
+    ];
+
+    expect(expected).toStrictEqual(actual);
+  });
+  it('should recognize slab links and return user mention as RichText', () => {
+    const text = '[Val](https://slab.discord.tools/users/8c5e38a7)';
+    const actual = markdownToRichText(text);
+
+    const expected = [
+      notion.richTextMention({
+        type: 'user',
+        user: {
+          object: 'user',
+          name: 'Val',
+          id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
+        },
+      }),
+    ];
+
+    expect(expected).toStrictEqual(actual);
+  });
+});
+
+describe('find matching user', () => {
+  it('gets a notion user', async () => {
+    const actual = await notion.findMatchingUser('Val');
+
+    const expected = {
+      type: 'person',
+      name: 'Val',
+    };
+
+    return expect(actual).toStrictEqual(expect.objectContaining(expected));
+  });
 });

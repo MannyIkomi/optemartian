@@ -105,19 +105,24 @@ describe('gfm parser', () => {
   });
 
   it('should parse code block', () => {
-    const ast = md.root(
-      md.paragraph(md.text('hello')),
-      md.code('public class Foo {}', 'java')
-    );
+    const ast = md.root(md.code('public class Foo {}', 'java'));
 
     const actual = parseBlocks(ast);
 
     const expected = [
-      notion.paragraph([notion.richText('hello')]),
+      notion.code([notion.richText('public class Foo {}')], 'java'),
+    ];
+
+    expect(actual).toStrictEqual(expected);
+  });
+  it('should parse inline code', () => {
+    const ast = md.root(md.paragraph(md.inlineCode('public class Foo {}')));
+
+    const actual = parseBlocks(ast);
+
+    const expected = [
       notion.paragraph([
-        notion.richText('public class Foo {}', {
-          annotations: {code: true},
-        }),
+        notion.richText('public class Foo {}', {annotations: {code: true}}),
       ]),
     ];
 
@@ -232,5 +237,9 @@ describe('gfm parser', () => {
     ];
 
     expect(actual).toStrictEqual(expected);
+  });
+
+  it('should parse slab user mentions', () => {
+    // ast
   });
 });
