@@ -7,7 +7,7 @@ function parseInline(
   options?: notion.RichTextOptions
 ): notion.RichText[] {
   const copy = {
-    type: '',
+    type: 'text',
     annotations: {
       ...(options?.annotations ?? {}),
     },

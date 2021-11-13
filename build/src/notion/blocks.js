@@ -7,7 +7,7 @@ function code(text, lang) {
         object: 'block',
         type: 'code',
         code: {
-            text: text,
+            text,
             language: lang,
         },
     };
@@ -18,7 +18,7 @@ function paragraph(text) {
         object: 'block',
         type: 'paragraph',
         paragraph: {
-            text: text,
+            text,
         },
     };
 }
@@ -28,7 +28,7 @@ function headingOne(text) {
         object: 'block',
         type: 'heading_1',
         heading_1: {
-            text: text,
+            text,
         },
     };
 }
@@ -38,7 +38,7 @@ function headingTwo(text) {
         object: 'block',
         type: 'heading_2',
         heading_2: {
-            text: text,
+            text,
         },
     };
 }
@@ -48,7 +48,7 @@ function headingThree(text) {
         object: 'block',
         type: 'heading_3',
         heading_3: {
-            text: text,
+            text,
         },
     };
 }
@@ -58,7 +58,7 @@ function bulletedListItem(text) {
         object: 'block',
         type: 'bulleted_list_item',
         bulleted_list_item: {
-            text: text,
+            text,
         },
     };
 }
@@ -68,7 +68,7 @@ function numberedListItem(text) {
         object: 'block',
         type: 'numbered_list_item',
         numbered_list_item: {
-            text: text,
+            text,
         },
     };
 }
@@ -78,7 +78,7 @@ function toDo(checked, text) {
         object: 'block',
         type: 'to_do',
         to_do: {
-            text: text,
+            text,
             checked: checked,
         },
     };

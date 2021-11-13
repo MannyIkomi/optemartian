@@ -4,7 +4,7 @@ exports.richTextMention = exports.richText = void 0;
 function richText(content, options = {}) {
     var _a, _b;
     const annotations = (_a = options.annotations) !== null && _a !== void 0 ? _a : {};
-    const type = (_b = options.type) !== null && _b !== void 0 ? _b : '';
+    const type = (_b = options.type) !== null && _b !== void 0 ? _b : 'text';
     return {
         type: type,
         annotations: {
@@ -29,9 +29,9 @@ function richText(content, options = {}) {
 }
 exports.richText = richText;
 function richTextMention(mention, options = {}) {
-    var _a;
+    var _a, _b;
     const annotations = (_a = options.annotations) !== null && _a !== void 0 ? _a : {};
-    const type = options.type || 'mention';
+    const type = (_b = options.type) !== null && _b !== void 0 ? _b : 'mention';
     // type: type,
     // mention: {
     //   type: 'user',

@@ -24,7 +24,7 @@ const notion = __importStar(require("../notion"));
 function parseInline(element, options) {
     var _a, _b;
     const copy = {
-        type: '',
+        type: 'text',
         annotations: {
             ...((_a = options === null || options === void 0 ? void 0 : options.annotations) !== null && _a !== void 0 ? _a : {}),
         },
