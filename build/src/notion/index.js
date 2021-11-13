@@ -12,5 +12,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./blocks"), exports);
 __exportStar(require("./common"), exports);
+__exportStar(require("./api-sdk"), exports);
 __exportStar(require("@notionhq/client/build/src/api-types"), exports);
 //# sourceMappingURL=index.js.map

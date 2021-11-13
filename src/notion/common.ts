@@ -5,7 +5,6 @@ import type {
   DatabaseMention,
   PageMention,
   UserMention,
-  RichTextMention,
 } from '@notionhq/client/build/src/api-types';
 
 export interface RichTextOptions {
@@ -60,7 +59,7 @@ export function richTextMention(
   //   },
   // },
   return {
-    type: 'mention',
+    type: type,
     mention,
     annotations: {
       bold: false,

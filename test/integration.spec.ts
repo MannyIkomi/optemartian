@@ -69,3 +69,16 @@ hello _world_
     expect(expected).toStrictEqual(actual);
   });
 });
+
+describe('find matching user', () => {
+  it('gets a notion user', async () => {
+    const actual = await notion.findMatchingUser('Val');
+
+    const expected = {
+      type: 'person',
+      name: 'Val',
+    };
+
+    return expect(actual).toStrictEqual(expect.objectContaining(expected));
+  });
+});

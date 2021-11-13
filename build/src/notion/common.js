@@ -41,7 +41,7 @@ function richTextMention(mention, options = {}) {
     //   },
     // },
     return {
-        type: 'mention',
+        type: type,
         mention,
         annotations: {
             bold: false,

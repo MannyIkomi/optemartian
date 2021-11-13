@@ -35,9 +35,10 @@ function parseInline(
     case 'link':
       // element.url.includes()
       if (element.url.includes('slab.discord.tools/users/')) {
-        // fetch where link name is a notion user name
-
         copy.type = 'mention';
+        // fetch where link name is a notion user name
+        // @ts-ignore
+        const linkDisplayText = element.children[0].value;
 
         return [
           // need call api for a dynamic name match
@@ -46,8 +47,7 @@ function parseInline(
               type: 'user',
               user: {
                 object: 'user',
-                // @ts-ignore
-                name: element.children[0].value,
+                name: linkDisplayText,
                 id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
               },
             },
