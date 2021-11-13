@@ -48,7 +48,7 @@ export function richTextMention(
   options: RichTextOptions = {}
 ): RichText {
   const annotations = options.annotations ?? {};
-  const type = options.type || 'mention';
+  const type = options.type ?? 'mention';
 
   // type: type,
   // mention: {
