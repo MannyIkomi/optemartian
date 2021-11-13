@@ -64,7 +64,7 @@ hello _world_
         expect(expected).toStrictEqual(actual);
     });
     it('should recognize slab links and return user mention as RichText', () => {
-        const text = 'Some text around [Val](https://slab.discord.tools/users/8c5e38a7) a users links';
+        const text = '[Val](https://slab.discord.tools/users/8c5e38a7)';
         const actual = (0, src_1.markdownToRichText)(text);
         const expected = [
             notion.richTextMention({
