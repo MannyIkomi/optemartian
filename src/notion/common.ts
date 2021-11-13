@@ -18,7 +18,7 @@ export function richText(
   options: RichTextOptions = {}
 ): RichText {
   const annotations = options.annotations ?? {};
-  const type = options.type ?? '';
+  const type = options.type ?? 'text';
 
   return {
     type: type,
