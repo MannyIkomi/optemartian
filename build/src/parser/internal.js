@@ -49,16 +49,15 @@ function parseInline(element, options) {
             if (element.url.includes('slab.discord.tools/users/')) {
                 copy.type = 'mention';
                 // fetch where link name is a notion user name
-                // @ts-ignore
+                // @ts-ignores
                 const linkDisplayText = element.children[0].value;
                 return [
-                    // need call api for a dynamic name match
                     notion.richTextMention({
                         type: 'user',
                         user: {
                             object: 'user',
                             name: linkDisplayText,
-                            id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
+                            id: '',
                         },
                     }, copy),
                 ];
