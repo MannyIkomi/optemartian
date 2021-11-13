@@ -48,14 +48,16 @@ function parseInline(element, options) {
             // element.url.includes()
             if (element.url.includes('slab.discord.tools/users/')) {
                 // fetch where link name is a notion user name
-                console.log('el', element, 'copy', copy);
+                // Why is element.children[0].value not working?
                 copy.type = 'mention';
                 return [
+                    // need call api for a dynamic name match
                     notion.richTextMention({
                         type: 'user',
                         user: {
                             object: 'user',
-                            name: 'Val',
+                            // @ts-ignore
+                            name: element.children[0].value,
                             id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
                         },
                     }, copy),
