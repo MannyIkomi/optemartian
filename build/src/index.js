@@ -25,6 +25,20 @@ const remark_gfm_1 = __importDefault(require("remark-gfm"));
  *
  * @param body any Markdown or GFM content
  */
+function urlToMention(options = {}) {
+    const substring = options;
+    if (!substring) {
+        throw new Error('Substring required for transformer');
+    }
+    console.log('tree', options);
+    return tree => {
+        // visit(tree, 'type.paragraph', paragraph => {
+        //   console.log('paragraph', paragraph);
+        // });
+        console.log('Find substring', substring);
+        return tree;
+    };
+}
 function markdownToBlocks(body) {
     const root = (0, unified_1.default)().use(remark_parse_1.default).use(remark_gfm_1.default).parse(body);
     return (0, internal_1.parseBlocks)(root);
@@ -39,7 +53,11 @@ exports.markdownToBlocks = markdownToBlocks;
 function markdownToRichText(text) {
     // intercept markdown strings here
     // check for string including a user mention
-    const root = (0, unified_1.default)().use(remark_parse_1.default).use(remark_gfm_1.default).parse(text);
+    const root = (0, unified_1.default)()
+        .use(remark_parse_1.default)
+        .use(remark_gfm_1.default)
+        .use(urlToMention, { substring: 'slab.discord.tools/users/' })
+        .parse(text);
     return (0, internal_1.parseRichText)(root);
 }
 exports.markdownToRichText = markdownToRichText;

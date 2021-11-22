@@ -72,7 +72,7 @@ hello _world_
                 user: {
                     object: 'user',
                     name: 'Val',
-                    id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
+                    id: '',
                 },
             }),
         ];
