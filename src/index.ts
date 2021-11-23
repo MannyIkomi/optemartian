@@ -2,10 +2,11 @@ import unified from 'unified';
 import {visit} from 'unist-util-visit';
 import type * as uni from 'unified';
 import markdown from 'remark-parse';
-import type * as notion from './notion';
+import * as notion from './notion';
 import {parseBlocks, parseRichText} from './parser/internal';
 import type * as md from './markdown';
 import gfm from 'remark-gfm';
+// import * as notion from './notion';
 
 /**
  * Parses Markdown content into Notion Blocks.
@@ -26,9 +27,6 @@ import gfm from 'remark-gfm';
  */
 
 function urlToMention(options = {}) {
-  //@ts-ignore
-  console.log('THIS', this);
-
   const substring = options;
   if (!substring) {
     throw new Error('Substring required for transformer');
@@ -66,7 +64,33 @@ export function markdownToRichText(text: string): notion.RichText[] {
     .parse(text);
 
   visit(root, node => {
-    console.log(node);
+    let nodeReplacement;
+    if (node.type === 'link') {
+      // @ts-ignore
+      if (node.url.includes('slab.discord.tools/users/')) {
+        console.log(node);
+
+        nodeReplacement.type = 'mention';
+        // fetch where link name is a notion user name
+
+        // @ts-ignores
+        const linkDisplayText = node.children[0].value;
+
+        console.log([
+          notion.richTextMention(
+            {
+              type: 'user',
+              user: {
+                object: 'user',
+                name: linkDisplayText,
+                id: '',
+              },
+            },
+            nodeReplacement
+          ),
+        ]);
+      }
+    }
   });
 
   return parseRichText(root as unknown as md.Root);

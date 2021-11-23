@@ -34,33 +34,10 @@ function parseInline(
       return element.children.flatMap(child => parseInline(child, copy));
 
     case 'link':
-      // element.url.includes()
-      if (element.url.includes('slab.discord.tools/users/')) {
-        copy.type = 'mention';
-        // fetch where link name is a notion user name
+      copy.url = element.url;
+      return element.children.flatMap(child => parseInline(child, copy));
 
-        // @ts-ignores
-        const linkDisplayText = element.children[0].value;
-
-        return [
-          notion.richTextMention(
-            {
-              type: 'user',
-              user: {
-                object: 'user',
-                name: linkDisplayText,
-                id: '',
-              },
-            },
-            copy
-          ),
-        ];
-      }
-      if (!element.url.includes('slab.discord.tools/users/')) {
-        copy.url = element.url;
-        return element.children.flatMap(child => parseInline(child, copy));
-      }
-      throw new Error('Something went wrong processing links');
+    // throw new Error('Something went wrong processing links');
 
     case 'inlineCode':
       copy.annotations.code = true;
