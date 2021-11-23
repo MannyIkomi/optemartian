@@ -3,8 +3,13 @@
   "version": "1.0.3",
   "description": "Converts Markdown to Notion Blocks and RichText",
   "repository": "https://github.com/instantish/martian",
-  "main": "build/src/index.js",
+  "type": "module",
+  "exports": "./build/src/index.js",
   "types": "build/src/index.d.ts",
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "module": "ES2020",
   "scripts": {
     "test": "jest",
     "lint": "gts lint",
@@ -26,6 +31,7 @@
   "dependencies": {
     "@notionhq/client": "github:MannyIkomi/notion-sdk-js#modify-sdk-0.3.3",
     "dotenv": "^10.0.0",
+    "mdast-util-from-markdown": "^1.2.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
     "unified": "^9.2.1",

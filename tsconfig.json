@@ -6,6 +6,7 @@
     "allowUnreachableCode": false,
     "noImplicitAny": false,
     "allowUnusedLabels": false,
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "noEmitOnError": true,

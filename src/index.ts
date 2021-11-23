@@ -1,5 +1,5 @@
 import unified from 'unified';
-// import {visit} from 'unist-util-visit';
+import {visit} from 'unist-util-visit';
 import type * as uni from 'unified';
 import markdown from 'remark-parse';
 import type * as notion from './notion';
@@ -25,20 +25,21 @@ import gfm from 'remark-gfm';
  * @param body any Markdown or GFM content
  */
 
-function urlToMention(options = {}): uni.Transformer {
-  const substring = options;
+function urlToMention(options = {}) {
+  //@ts-ignore
+  console.log('THIS', this);
 
+  const substring = options;
   if (!substring) {
     throw new Error('Substring required for transformer');
   }
 
-  console.log('tree', options);
   return tree => {
     // visit(tree, 'type.paragraph', paragraph => {
     //   console.log('paragraph', paragraph);
     // });
+    console.log('TREE', tree);
     console.log('Find substring', substring);
-    return tree;
   };
 }
 
@@ -59,10 +60,14 @@ export function markdownToRichText(text: string): notion.RichText[] {
   // check for string including a user mention
 
   const root = unified()
+    .use(urlToMention, {substring: 'slab.discord.tools/users/'})
     .use(markdown)
     .use(gfm)
-    .use(urlToMention, {substring: 'slab.discord.tools/users/'})
     .parse(text);
+
+  visit(root, node => {
+    console.log(node);
+  });
 
   return parseRichText(root as unknown as md.Root);
 }

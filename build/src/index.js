@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.markdownToRichText = exports.markdownToBlocks = void 0;
 const unified_1 = __importDefault(require("unified"));
+const unist_util_visit_1 = require("unist-util-visit");
 const remark_parse_1 = __importDefault(require("remark-parse"));
 const internal_1 = require("./parser/internal");
 const remark_gfm_1 = __importDefault(require("remark-gfm"));
@@ -26,17 +27,18 @@ const remark_gfm_1 = __importDefault(require("remark-gfm"));
  * @param body any Markdown or GFM content
  */
 function urlToMention(options = {}) {
+    //@ts-ignore
+    console.log('THIS', this);
     const substring = options;
     if (!substring) {
         throw new Error('Substring required for transformer');
     }
-    console.log('tree', options);
     return tree => {
         // visit(tree, 'type.paragraph', paragraph => {
         //   console.log('paragraph', paragraph);
         // });
+        console.log('TREE', tree);
         console.log('Find substring', substring);
-        return tree;
     };
 }
 function markdownToBlocks(body) {
@@ -54,10 +56,13 @@ function markdownToRichText(text) {
     // intercept markdown strings here
     // check for string including a user mention
     const root = (0, unified_1.default)()
+        .use(urlToMention, { substring: 'slab.discord.tools/users/' })
         .use(remark_parse_1.default)
         .use(remark_gfm_1.default)
-        .use(urlToMention, { substring: 'slab.discord.tools/users/' })
         .parse(text);
+    (0, unist_util_visit_1.visit)(root, node => {
+        console.log(node);
+    });
     return (0, internal_1.parseRichText)(root);
 }
 exports.markdownToRichText = markdownToRichText;

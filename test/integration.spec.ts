@@ -82,3 +82,40 @@ describe('find matching user', () => {
     return expect(actual).toStrictEqual(expect.objectContaining(expected));
   });
 });
+
+describe('Markdown User Mention Plugin', () => {
+  it('dsfnbhdgjkas', () => {
+    const text =
+      'User mention [Val](https://slab.discord.tools/users/8c5e38a7)';
+
+    const expected = markdownToRichText(text);
+    const actual = [
+      {
+        annotations: {
+          bold: false,
+          code: false,
+          color: 'default',
+          italic: false,
+          strikethrough: false,
+          underline: false,
+        },
+        text: {content: 'User mention ', link: undefined},
+        type: 'text',
+      },
+      {
+        annotations: {
+          bold: false,
+          code: false,
+          color: 'default',
+          italic: false,
+          strikethrough: false,
+          underline: false,
+        },
+        mention: {type: 'user', user: {id: '', name: 'Val', object: 'user'}},
+        type: 'mention',
+      },
+    ];
+
+    expect(actual).toStrictEqual(expected);
+  });
+});
