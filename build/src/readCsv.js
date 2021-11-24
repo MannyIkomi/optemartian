@@ -19,31 +19,42 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
+exports.readCsv = void 0;
 const csv = __importStar(require("fast-csv"));
 // import {dirname} from 'path';
 // import {fileURLToPath} from 'url';
 // const __dirname = dirname(fileURLToPath(import.meta.url));
-const Users = [];
-let done = false;
-fs.createReadStream(path.resolve(__dirname, '../discordteam.csv'))
-    .pipe(csv.parse({ headers: true, delimiter: ';' }))
-    .on('error', error => console.error(error))
-    .on('data', row => {
-    done = false;
-    Users.push({
-        name: row.text,
-        email: row.email,
+function readCsv(filePath = '', config = {}) {
+    const { csvOptions, rowTransformer } = config;
+    if (!filePath) {
+        throw new Error(`filePath is required`);
+    }
+    return new Promise((reject, resolve) => {
+        const collectedRows = [];
+        csv
+            .parseFile(filePath, csvOptions)
+            .on('error', reject)
+            .on('data', row => {
+            console.log(row);
+            const transformedRow = rowTransformer(row);
+            transformedRow && collectedRows.push(transformedRow);
+        })
+            .on('end', rowCount => {
+            resolve(collectedRows);
+            console.log(`Parsed ${rowCount} rows`);
+        });
     });
-})
-    .on('end', rowCount => {
-    done = true;
-    console.log(`Parsed ${rowCount} rows`);
-});
+}
+exports.readCsv = readCsv;
+/* '../discordteam.csv' */
+/* row => {
+    Users.push({
+      name: row.text,
+      email: row.email,
+    });
+  } */
 // if (done === true) {
 //   console.log('DONE', done);
 //   console.log(Users);
 // }
-exports.default = Users;
-//# sourceMappingURL=userList.js.map
+//# sourceMappingURL=readCsv.js.map

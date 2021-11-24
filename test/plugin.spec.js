@@ -1,5 +1,6 @@
 import {withUserMentions} from '../src/plugin.js';
-import {markdownToRichText} from '../src/index';
+import {readCsv} from '../src/readCsv.js';
+import {markdownToRichText} from '../src/index.ts';
 
 describe('with User Mentions Plugin', () => {
   it('dsfnbhdgjkas', async () => {
@@ -42,5 +43,28 @@ describe('with User Mentions Plugin', () => {
     ];
 
     return expect(received).resolves.toStrictEqual(expected);
+  });
+});
+
+describe('CSV parsing', () => {
+  it('returns rows of data', async () => {
+    const received = await readCsv('discordteam.csv', {
+      csvOptions: {
+        delimiter: ';',
+        ignoreEmpty: true,
+        headers: true,
+        objectMode: true,
+      },
+      rowTransformer: row => ({
+        email: row.email,
+        name: row.name,
+        profile: row.profile_url,
+      }),
+    });
+    const expected = {};
+
+    return expect(received).resolves.toContain(
+      expect.objectContaining(expected)
+    );
   });
 });
