@@ -1,6 +1,5 @@
 import * as md from '../markdown';
 import * as notion from '../notion';
-import {findMatchingUser} from '../notion';
 
 function parseInline(
   element: md.PhrasingContent,

@@ -53,27 +53,12 @@ hello _world_
         expect(expected).toStrictEqual(actual);
     });
     it('should convert links to RichText', () => {
-        const text = 'This will be a mention: [Val](https://some.other.link.com/)';
+        const text = 'This will not be a mention: [Val](https://some.other.link.com/)';
         const actual = (0, src_1.markdownToRichText)(text);
         const expected = [
-            notion.richText('This will be a mention: '),
+            notion.richText('This will not be a mention: '),
             notion.richText('Val', {
                 url: 'https://some.other.link.com/',
-            }),
-        ];
-        expect(expected).toStrictEqual(actual);
-    });
-    it('should recognize slab links and return user mention as RichText', () => {
-        const text = '[Val](https://slab.discord.tools/users/8c5e38a7)';
-        const actual = (0, src_1.markdownToRichText)(text);
-        const expected = [
-            notion.richTextMention({
-                type: 'user',
-                user: {
-                    object: 'user',
-                    name: 'Val',
-                    id: '',
-                },
             }),
         ];
         expect(expected).toStrictEqual(actual);
@@ -86,40 +71,7 @@ describe('find matching user', () => {
             type: 'person',
             name: 'Val',
         };
-        return expect(actual).toStrictEqual(expect.objectContaining(expected));
-    });
-});
-describe('Markdown User Mention Plugin', () => {
-    it('dsfnbhdgjkas', () => {
-        const text = 'User mention [Val](https://slab.discord.tools/users/8c5e38a7)';
-        const expected = (0, src_1.markdownToRichText)(text);
-        const actual = [
-            {
-                annotations: {
-                    bold: false,
-                    code: false,
-                    color: 'default',
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                },
-                text: { content: 'User mention ', link: undefined },
-                type: 'text',
-            },
-            {
-                annotations: {
-                    bold: false,
-                    code: false,
-                    color: 'default',
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                },
-                mention: { type: 'user', user: { id: '', name: 'Val', object: 'user' } },
-                type: 'mention',
-            },
-        ];
-        expect(actual).toStrictEqual(expected);
+        expect(actual).toStrictEqual(expect.objectContaining(expected));
     });
 });
 //# sourceMappingURL=integration.spec.js.map

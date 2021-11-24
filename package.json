@@ -31,10 +31,12 @@
   "dependencies": {
     "@notionhq/client": "github:MannyIkomi/notion-sdk-js#modify-sdk-0.3.3",
     "dotenv": "^10.0.0",
+    "fast-csv": "^4.3.6",
     "mdast-util-from-markdown": "^1.2.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
     "unified": "^9.2.1",
+    "unist-util-map": "^3.0.0",
     "unist-util-visit": "^4.1.0"
   },
   "devDependencies": {

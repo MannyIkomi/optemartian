@@ -6,7 +6,7 @@ const config = {
   ],
   preset: 'ts-jest/presets/js-with-ts',
   testEnvironment: 'node',
-  testMatch: ['**/*.spec.ts'],
+  testMatch: ['**/*.spec.ts', '**/*.spec.js'],
 };
 
 export default config;

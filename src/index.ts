@@ -1,11 +1,11 @@
 import unified from 'unified';
-import {visit} from 'unist-util-visit';
-import type * as uni from 'unified';
+
 import markdown from 'remark-parse';
 import * as notion from './notion';
 import {parseBlocks, parseRichText} from './parser/internal';
 import type * as md from './markdown';
 import gfm from 'remark-gfm';
+
 // import * as notion from './notion';
 
 /**
@@ -26,21 +26,6 @@ import gfm from 'remark-gfm';
  * @param body any Markdown or GFM content
  */
 
-function urlToMention(options = {}) {
-  const substring = options;
-  if (!substring) {
-    throw new Error('Substring required for transformer');
-  }
-
-  return tree => {
-    // visit(tree, 'type.paragraph', paragraph => {
-    //   console.log('paragraph', paragraph);
-    // });
-    console.log('TREE', tree);
-    console.log('Find substring', substring);
-  };
-}
-
 export function markdownToBlocks(body: string): notion.Block[] {
   const root = unified().use(markdown).use(gfm).parse(body);
 
@@ -57,41 +42,36 @@ export function markdownToRichText(text: string): notion.RichText[] {
   // intercept markdown strings here
   // check for string including a user mention
 
-  const root = unified()
-    .use(urlToMention, {substring: 'slab.discord.tools/users/'})
-    .use(markdown)
-    .use(gfm)
-    .parse(text);
+  const root = unified().use(markdown).use(gfm).parse(text);
 
-  visit(root, node => {
-    let nodeReplacement;
-    if (node.type === 'link') {
-      // @ts-ignore
-      if (node.url.includes('slab.discord.tools/users/')) {
-        console.log(node);
+  /* const withUserMentions = tree =>
+    map(tree, node => {
+      if (node.type === 'link') {
+        // @ts-ignore
+        if (node.url.includes('slab.discord.tools/users/')) {
+          console.log(node);
 
-        nodeReplacement.type = 'mention';
-        // fetch where link name is a notion user name
+          // nodeReplacement.type = 'mention';
+          // fetch where link name is a notion user name
 
-        // @ts-ignores
-        const linkDisplayText = node.children[0].value;
+          // @ts-ignores
+          const linkDisplayText = node.children[0].value;
 
-        console.log([
-          notion.richTextMention(
-            {
+          return [
+            notion.richTextMention({
               type: 'user',
               user: {
                 object: 'user',
                 name: linkDisplayText,
                 id: '',
               },
-            },
-            nodeReplacement
-          ),
-        ]);
+            }),
+          ];
+        }
       }
-    }
-  });
+    }); */
 
-  return parseRichText(root as unknown as md.Root);
+  const richText = parseRichText(root as unknown as md.Root);
+
+  return richText;
 }

@@ -19,7 +19,12 @@ export async function getWorkspaceUsers() {
 }
 
 export async function findMatchingUser(query) {
+  if (!query) {
+    throw new Error('🚨 Please pass a query string');
+  }
+
   const users = await getWorkspaceUsers();
+
   const foundUser = users.find(
     ({name}) => name.toUpperCase() === query.toUpperCase() // case-insensitive
   );
