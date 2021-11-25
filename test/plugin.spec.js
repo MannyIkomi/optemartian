@@ -1,13 +1,61 @@
-import {withUserMentions} from '../src/plugin.js';
+import {markdownToRichText, markdownToBlocks} from '../src/index.ts';
+import {withUserMentions, swapUserMentions} from '../src/plugin.js';
 import {readCsv} from '../src/readCsv.js';
-import {markdownToRichText} from '../src/index.ts';
 
 describe('with User Mentions Plugin', () => {
-  it('dsfnbhdgjkas', async () => {
+  it('Converts matching links inside Block[] to user mentions', async () => {
+    const text =
+      'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
+    const received = withUserMentions(markdownToBlocks(text));
+    const expected = [
+      {
+        object: 'block',
+        type: 'paragraph',
+        paragraph: {
+          text: [
+            {
+              annotations: {
+                bold: false,
+                code: false,
+                color: 'default',
+                italic: false,
+                strikethrough: false,
+                underline: false,
+              },
+              text: {content: 'User mention ', link: undefined},
+              type: 'text',
+            },
+            {
+              annotations: {
+                bold: false,
+                code: false,
+                color: 'default',
+                italic: false,
+                strikethrough: false,
+                underline: false,
+              },
+              mention: {
+                type: 'user',
+                user: {
+                  id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
+                  name: 'Val',
+                  object: 'user',
+                },
+              },
+              type: 'mention',
+            },
+          ],
+        },
+      },
+    ];
+    return expect(received).resolves.toStrictEqual(expected);
+  });
+
+  it('Converts matching links inside RichText[] to user mentions', async () => {
     const text =
       'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
 
-    const received = withUserMentions(markdownToRichText(text));
+    const received = swapUserMentions(markdownToRichText(text));
     const expected = [
       {
         annotations: {

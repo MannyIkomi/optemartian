@@ -1,7 +1,21 @@
+import {paragraph} from './notion';
 import * as notion from './notion/index.ts';
 import {readCsv} from './readCsv.js';
 
-export async function withUserMentions(richTextAst = []) {
+export async function withUserMentions(notionBlocks = []) {
+  return Promise.all(
+    notionBlocks.map(async block => {
+      if (block.paragraph && block.type === 'paragraph') {
+        const richText = block.paragraph.text;
+        console.log(richText);
+        return {...block, paragraph: {text: await swapUserMentions(richText)}};
+      }
+      return block;
+    })
+  );
+}
+
+export async function swapUserMentions(richTextAst = []) {
   try {
     return Promise.all(
       richTextAst.flatMap(async ast => {
@@ -29,8 +43,6 @@ export async function withUserMentions(richTextAst = []) {
             userDirectory
           );
 
-          console.log('MATCHED NOTION USER:', matchedUser);
-
           if (!matchedUser) {
             console.warn(
               `Could not find matching user for ${JSON.stringify(mention)} at ${
@@ -39,6 +51,8 @@ export async function withUserMentions(richTextAst = []) {
             );
             return ast;
           }
+
+          console.log('MATCHED NOTION USER:', matchedUser);
 
           return notion.richTextMention({
             type: 'user',

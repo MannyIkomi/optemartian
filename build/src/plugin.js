@@ -19,10 +19,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withUserMentions = void 0;
+exports.swapUserMentions = exports.withUserMentions = void 0;
 const notion = __importStar(require("./notion/index.ts"));
 const readCsv_js_1 = require("./readCsv.js");
-async function withUserMentions(richTextAst = []) {
+async function withUserMentions(notionBlocks = []) {
+    return Promise.all(notionBlocks.map(async (block) => {
+        if (block.paragraph && block.type === 'paragraph') {
+            const richText = block.paragraph.text;
+            console.log(richText);
+            return { ...block, paragraph: { text: await swapUserMentions(richText) } };
+        }
+        return block;
+    }));
+}
+exports.withUserMentions = withUserMentions;
+async function swapUserMentions(richTextAst = []) {
     try {
         return Promise.all(richTextAst.flatMap(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
@@ -43,11 +54,11 @@ async function withUserMentions(richTextAst = []) {
                     }),
                 });
                 const matchedUser = await notion.findMatchingUser(mention, userDirectory);
-                console.log('MATCHED NOTION USER:', matchedUser);
                 if (!matchedUser) {
                     console.warn(`Could not find matching user for ${JSON.stringify(mention)} at ${hasLink.url}`);
                     return ast;
                 }
+                console.log('MATCHED NOTION USER:', matchedUser);
                 return notion.richTextMention({
                     type: 'user',
                     user: {
@@ -64,5 +75,5 @@ async function withUserMentions(richTextAst = []) {
         console.error(err);
     }
 }
-exports.withUserMentions = withUserMentions;
+exports.swapUserMentions = swapUserMentions;
 //# sourceMappingURL=plugin.js.map

@@ -32,14 +32,6 @@ function richTextMention(mention, options = {}) {
     var _a, _b;
     const annotations = (_a = options.annotations) !== null && _a !== void 0 ? _a : {};
     const type = (_b = options.type) !== null && _b !== void 0 ? _b : 'mention';
-    // type: type,
-    // mention: {
-    //   type: 'user',
-    //   user: {
-    //     type: 'person',
-    //     name: content,
-    //   },
-    // },
     return {
         type: type,
         mention,

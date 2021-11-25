@@ -1,5 +1,6 @@
 import * as md from '../markdown';
 import * as notion from '../notion';
+import {swapUserMentions} from '../plugin';
 
 function parseInline(
   element: md.PhrasingContent,

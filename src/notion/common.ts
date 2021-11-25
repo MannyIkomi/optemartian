@@ -50,14 +50,6 @@ export function richTextMention(
   const annotations = options.annotations ?? {};
   const type = options.type ?? 'mention';
 
-  // type: type,
-  // mention: {
-  //   type: 'user',
-  //   user: {
-  //     type: 'person',
-  //     name: content,
-  //   },
-  // },
   return {
     type: type,
     mention,
