@@ -1,20 +1,29 @@
 import * as notion from './notion/index.ts';
 import {readCsv} from './readCsv.js';
 
-export async function withUserMentions(notionBlocks = []) {
+export async function withUserMentions(
+  notionBlocks = [],
+  csvDirectory = 'discordteam.csv'
+) {
   return Promise.all(
     notionBlocks.map(async block => {
       if (block.paragraph && block.type === 'paragraph') {
         const richText = block.paragraph.text;
         console.log(richText);
-        return {...block, paragraph: {text: await swapUserMentions(richText)}};
+        return {
+          ...block,
+          paragraph: {text: await swapUserMentions(richText, csvDirectory)},
+        };
       }
       return block;
     })
   );
 }
 
-export async function swapUserMentions(richTextAst = []) {
+export async function swapUserMentions(
+  richTextAst = [],
+  csvDirectory = 'discordteam.csv'
+) {
   try {
     return Promise.all(
       richTextAst.flatMap(async ast => {
@@ -23,7 +32,7 @@ export async function swapUserMentions(richTextAst = []) {
           console.log(ast);
 
           const mention = ast.text;
-          const userDirectory = await readCsv('discordteam.csv', {
+          const userDirectory = await readCsv(csvDirectory, {
             csvOptions: {
               delimiter: ';',
               ignoreEmpty: true,

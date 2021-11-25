@@ -1,2 +1,2 @@
-export function withUserMentions(notionBlocks?: any[]): Promise<any[]>;
-export function swapUserMentions(richTextAst?: any[]): Promise<any[] | undefined>;
+export function withUserMentions(notionBlocks?: any[], csvDirectory?: string): Promise<any[]>;
+export function swapUserMentions(richTextAst?: any[], csvDirectory?: string): Promise<any[] | undefined>;

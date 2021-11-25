@@ -22,25 +22,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.swapUserMentions = exports.withUserMentions = void 0;
 const notion = __importStar(require("./notion/index.ts"));
 const readCsv_js_1 = require("./readCsv.js");
-async function withUserMentions(notionBlocks = []) {
+async function withUserMentions(notionBlocks = [], csvDirectory = 'discordteam.csv') {
     return Promise.all(notionBlocks.map(async (block) => {
         if (block.paragraph && block.type === 'paragraph') {
             const richText = block.paragraph.text;
             console.log(richText);
-            return { ...block, paragraph: { text: await swapUserMentions(richText) } };
+            return {
+                ...block,
+                paragraph: { text: await swapUserMentions(richText, csvDirectory) },
+            };
         }
         return block;
     }));
 }
 exports.withUserMentions = withUserMentions;
-async function swapUserMentions(richTextAst = []) {
+async function swapUserMentions(richTextAst = [], csvDirectory = 'discordteam.csv') {
     try {
         return Promise.all(richTextAst.flatMap(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
             if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
                 console.log(ast);
                 const mention = ast.text;
-                const userDirectory = await (0, readCsv_js_1.readCsv)('discordteam.csv', {
+                const userDirectory = await (0, readCsv_js_1.readCsv)(csvDirectory, {
                     csvOptions: {
                         delimiter: ';',
                         ignoreEmpty: true,
