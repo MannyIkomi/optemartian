@@ -24,3 +24,4 @@ export declare function markdownToBlocks(body: string): notion.Block[];
  * @param text any inline Markdown or GFM content
  */
 export declare function markdownToRichText(text: string): notion.RichText[];
+export * from './plugin';

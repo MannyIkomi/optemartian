@@ -1,4 +1,3 @@
-import {paragraph} from './notion';
 import * as notion from './notion/index.ts';
 import {readCsv} from './readCsv.js';
 
