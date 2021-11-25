@@ -21,31 +21,41 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withUserMentions = void 0;
 const notion = __importStar(require("./notion/index.ts"));
+const readCsv_js_1 = require("./readCsv.js");
 async function withUserMentions(richTextAst = []) {
     try {
         return Promise.all(richTextAst.flatMap(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
             if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
                 console.log(ast);
-                const mentionName = ast.text.content;
-                // confirm mention name matches discordteam.csv
-                return notion
-                    .findMatchingUser(mentionName)
-                    .then(matchedUser => {
-                    if (!matchedUser) {
-                        console.warn(`Could not find matching user for ${mentionName}`);
-                        return ast;
-                    }
-                    return notion.richTextMention({
-                        type: 'user',
-                        user: {
-                            object: 'user',
-                            name: matchedUser.name,
-                            id: matchedUser.id,
-                        },
-                    });
-                })
-                    .catch(err => console.log('CATCH ERROR', err));
+                const mention = ast.text;
+                const userDirectory = await (0, readCsv_js_1.readCsv)('discordteam.csv', {
+                    csvOptions: {
+                        delimiter: ';',
+                        ignoreEmpty: true,
+                        headers: true,
+                        objectMode: true,
+                    },
+                    rowTransformer: row => ({
+                        email: row.email,
+                        name: row.text,
+                        profile: row.profile_url,
+                    }),
+                });
+                const matchedUser = await notion.findMatchingUser(mention, userDirectory);
+                console.log('MATCHED NOTION USER:', matchedUser);
+                if (!matchedUser) {
+                    console.warn(`Could not find matching user for ${JSON.stringify(mention)} at ${hasLink.url}`);
+                    return ast;
+                }
+                return notion.richTextMention({
+                    type: 'user',
+                    user: {
+                        object: 'user',
+                        name: matchedUser.name,
+                        id: matchedUser.id,
+                    },
+                });
             }
             return ast;
         }));

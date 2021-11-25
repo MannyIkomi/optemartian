@@ -21,12 +21,30 @@ async function getWorkspaceUsers() {
     }
 }
 exports.getWorkspaceUsers = getWorkspaceUsers;
-async function findMatchingUser(query) {
-    if (!query) {
-        throw new Error('🚨 Please pass a query string');
+async function findMatchingUser(mention = {}, userDirectory = []) {
+    if (!mention) {
+        throw new Error('🚨 Please pass a mention object');
     }
-    const users = await getWorkspaceUsers();
-    const foundUser = users.find(({ name }) => name.toUpperCase() === query.toUpperCase() // case-insensitive
+    const notionUsers = await getWorkspaceUsers();
+    const mentionName = mention.content;
+    const mentionLink = mention.link.url;
+    if (userDirectory && userDirectory.length > 0) {
+        const userIdRegex = /\w+$/gm;
+        const fromUserDirectory = userDirectory.find(({ name = '', profile = '' }) => {
+            const profileId = mentionLink.match(userIdRegex)[0];
+            // console.log('PROFILE ID:', profileId);
+            return profileId
+                ? profile.includes(profileId)
+                : name.includes(mentionName);
+        });
+        console.log('DIRECTORY MATCH:', fromUserDirectory);
+        const foundUser = notionUsers.find(({ name }) => fromUserDirectory
+            ? fromUserDirectory.name.toUpperCase().includes(name.toUpperCase())
+            : name.toUpperCase() === mentionName.toUpperCase() // case-insensitiv
+        );
+        return foundUser;
+    }
+    const foundUser = notionUsers.find(({ name }) => name.toUpperCase() === mentionName.toUpperCase() // case-insensitive
     );
     return foundUser;
 }

@@ -5,7 +5,7 @@ import {markdownToRichText} from '../src/index.ts';
 describe('with User Mentions Plugin', () => {
   it('dsfnbhdgjkas', async () => {
     const text =
-      'User mention [Val](https://slab.discord.tools/users/8c5e38a7)';
+      'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
 
     const received = withUserMentions(markdownToRichText(text));
     const expected = [
@@ -45,7 +45,7 @@ describe('with User Mentions Plugin', () => {
     return expect(received).resolves.toStrictEqual(expected);
   });
 });
-
+/* 
 describe('CSV parsing', () => {
   it('returns rows of data', async () => {
     const received = await readCsv('discordteam.csv', {
@@ -57,14 +57,19 @@ describe('CSV parsing', () => {
       },
       rowTransformer: row => ({
         email: row.email,
-        name: row.name,
+        name: row.text,
         profile: row.profile_url,
       }),
     });
-    const expected = {};
+    console.log(received);
 
-    return expect(received).resolves.toContain(
-      expect.objectContaining(expected)
-    );
-  });
-});
+    const expected = {
+      email: 'valentine.erokhin@discordapp.com',
+      name: 'Valentine Erokhin',
+      profile: '/users/valentine-erokhin-0groiz7t',
+    };
+
+    expect(received).toThrow();
+    // toEqual(expect.arrayContaining(expected));
+  }, 10000);
+}); */

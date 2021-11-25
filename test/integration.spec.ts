@@ -56,7 +56,10 @@ hello _world_
 
 describe('find matching user', () => {
   it('gets a notion user', async () => {
-    const actual = await notion.findMatchingUser('Val');
+    const actual = await notion.findMatchingUser({
+      content: 'Val',
+      link: {url: 'https://slab.discord.tools/users/0groiz7t'},
+    });
 
     const expected = {
       type: 'person',

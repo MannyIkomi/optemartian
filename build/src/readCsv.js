@@ -29,13 +29,12 @@ function readCsv(filePath = '', config = {}) {
     if (!filePath) {
         throw new Error(`filePath is required`);
     }
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
         const collectedRows = [];
         csv
             .parseFile(filePath, csvOptions)
             .on('error', reject)
             .on('data', row => {
-            console.log(row);
             const transformedRow = rowTransformer(row);
             transformedRow && collectedRows.push(transformedRow);
         })
@@ -46,15 +45,4 @@ function readCsv(filePath = '', config = {}) {
     });
 }
 exports.readCsv = readCsv;
-/* '../discordteam.csv' */
-/* row => {
-    Users.push({
-      name: row.text,
-      email: row.email,
-    });
-  } */
-// if (done === true) {
-//   console.log('DONE', done);
-//   console.log(Users);
-// }
 //# sourceMappingURL=readCsv.js.map
