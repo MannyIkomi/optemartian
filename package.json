@@ -7,7 +7,7 @@
   "exports": "./build/src/index.js",
   "types": "build/src/index.d.ts",
   "engines": {
-    "node": "^17.0.0"
+    "node": "^16.0.0"
   },
   "module": "ES2020",
   "scripts": {
