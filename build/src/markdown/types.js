@@ -1,4 +1,3 @@
-"use strict";
 // From https://github.com/syntax-tree/mdast
-Object.defineProperty(exports, "__esModule", { value: true });
+export {};
 //# sourceMappingURL=types.js.map

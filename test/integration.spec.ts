@@ -1,5 +1,5 @@
-import {markdownToBlocks, markdownToRichText} from '../src';
-import * as notion from '../src/notion';
+import {markdownToBlocks, markdownToRichText} from '../src/index';
+import * as notion from '../src/notion/index';
 
 describe('markdown converter', () => {
   it('should convert markdown to blocks', () => {

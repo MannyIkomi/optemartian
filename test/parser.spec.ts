@@ -1,6 +1,6 @@
-import * as md from '../src/markdown';
-import {text} from '../src/markdown';
-import * as notion from '../src/notion';
+import * as md from '../src/markdown/index';
+import {text} from '../src/markdown/index';
+import * as notion from '../src/notion/index';
 import {parseBlocks, parseRichText} from '../src/parser/internal';
 
 describe('gfm parser', () => {

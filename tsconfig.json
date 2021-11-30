@@ -8,22 +8,24 @@
     "allowUnusedLabels": false,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "pretty": true,
     "sourceMap": true,
-    "target": "es2018",
-    "lib": [
-      "es2019"
-    ],
+
+    "lib": ["es2020"],
+    "module": "es2020",
+    "target": "es2020",
+    "moduleResolution": "node",
+    
     "rootDir": ".",
     "outDir": "build",
     "strict": true,
     "allowSyntheticDefaultImports": true,
+    "declaration": true,
     "esModuleInterop": true,
-    "declaration": true
+    "skipLibCheck": true,
   },
   "include": [
     "src/**/*.ts",

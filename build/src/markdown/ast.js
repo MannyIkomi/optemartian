@@ -1,109 +1,92 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tableCell = exports.tableRow = exports.table = exports.strikethrough = exports.orderedList = exports.unorderedList = exports.checkedListItem = exports.listItem = exports.blockquote = exports.code = exports.heading = exports.thematicBreak = exports.link = exports.root = exports.paragraph = exports.inlineCode = exports.strong = exports.emphasis = exports.text = void 0;
-function text(value) {
+export function text(value) {
     return {
         type: 'text',
         value: value,
     };
 }
-exports.text = text;
-function emphasis(...children) {
+export function emphasis(...children) {
     return {
         type: 'emphasis',
         children: children,
     };
 }
-exports.emphasis = emphasis;
-function strong(...children) {
+export function strong(...children) {
     return {
         type: 'strong',
         children: children,
     };
 }
-exports.strong = strong;
-function inlineCode(value) {
+export function inlineCode(value) {
     return {
         type: 'inlineCode',
         value: value,
     };
 }
-exports.inlineCode = inlineCode;
-function paragraph(...children) {
+export function paragraph(...children) {
     return {
         type: 'paragraph',
         children: children,
     };
 }
-exports.paragraph = paragraph;
-function root(...children) {
+export function root(...children) {
     return {
         type: 'root',
         children: children,
     };
 }
-exports.root = root;
-function link(url, ...children) {
+export function link(url, ...children) {
     return {
         type: 'link',
         children: children,
         url: url,
     };
 }
-exports.link = link;
-function thematicBreak() {
+export function thematicBreak() {
     return {
         type: 'thematicBreak',
     };
 }
-exports.thematicBreak = thematicBreak;
-function heading(depth, ...children) {
+export function heading(depth, ...children) {
     return {
         type: 'heading',
         depth: depth,
         children: children,
     };
 }
-exports.heading = heading;
-function code(value, lang) {
+export function code(value, lang) {
     return {
         type: 'code',
         lang: lang,
         value: value,
     };
 }
-exports.code = code;
-function blockquote(...children) {
+export function blockquote(...children) {
     return {
         type: 'blockquote',
         children: children,
     };
 }
-exports.blockquote = blockquote;
-function listItem(...children) {
+export function listItem(...children) {
     return {
         type: 'listitem',
         children: children,
     };
 }
-exports.listItem = listItem;
-function checkedListItem(checked, ...children) {
+export function checkedListItem(checked, ...children) {
     return {
         type: 'listitem',
         checked: checked,
         children: children,
     };
 }
-exports.checkedListItem = checkedListItem;
-function unorderedList(...children) {
+export function unorderedList(...children) {
     return {
         type: 'list',
         children: children,
         ordered: false,
     };
 }
-exports.unorderedList = unorderedList;
-function orderedList(...children) {
+export function orderedList(...children) {
     return {
         type: 'list',
         children: children,
@@ -111,33 +94,28 @@ function orderedList(...children) {
         ordered: true,
     };
 }
-exports.orderedList = orderedList;
-function strikethrough(...children) {
+export function strikethrough(...children) {
     return {
         type: 'delete',
         children: children,
     };
 }
-exports.strikethrough = strikethrough;
-function table(...children) {
+export function table(...children) {
     return {
         type: 'table',
         children: children,
     };
 }
-exports.table = table;
-function tableRow(...children) {
+export function tableRow(...children) {
     return {
         type: 'tableRow',
         children: children,
     };
 }
-exports.tableRow = tableRow;
-function tableCell(...children) {
+export function tableCell(...children) {
     return {
         type: 'tableCell',
         children: children,
     };
 }
-exports.tableCell = tableCell;
 //# sourceMappingURL=ast.js.map

@@ -1,10 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.richTextMention = exports.richText = void 0;
-function richText(content, options = {}) {
-    var _a, _b;
-    const annotations = (_a = options.annotations) !== null && _a !== void 0 ? _a : {};
-    const type = (_b = options.type) !== null && _b !== void 0 ? _b : 'text';
+export function richText(content, options = {}) {
+    const annotations = options.annotations ?? {};
+    const type = options.type ?? 'text';
     return {
         type: type,
         annotations: {
@@ -27,11 +23,9 @@ function richText(content, options = {}) {
         },
     };
 }
-exports.richText = richText;
-function richTextMention(mention, options = {}) {
-    var _a, _b;
-    const annotations = (_a = options.annotations) !== null && _a !== void 0 ? _a : {};
-    const type = (_b = options.type) !== null && _b !== void 0 ? _b : 'mention';
+export function richTextMention(mention, options = {}) {
+    const annotations = options.annotations ?? {};
+    const type = options.type ?? 'mention';
     return {
         type: type,
         mention,
@@ -46,5 +40,4 @@ function richTextMention(mention, options = {}) {
         },
     };
 }
-exports.richTextMention = richTextMention;
 //# sourceMappingURL=common.js.map

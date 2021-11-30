@@ -3,15 +3,14 @@
   "version": "1.0.3",
   "description": "Converts Markdown to Notion Blocks and RichText",
   "repository": "https://github.com/instantish/martian",
-  "type": "module",
   "exports": "./build/src/index.js",
   "types": "build/src/index.d.ts",
   "engines": {
     "node": "^16.0.0"
   },
-  "module": "ES2020",
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",

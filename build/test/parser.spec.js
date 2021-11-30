@@ -1,32 +1,11 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const md = __importStar(require("../src/markdown"));
-const markdown_1 = require("../src/markdown");
-const notion = __importStar(require("../src/notion"));
-const internal_1 = require("../src/parser/internal");
+import * as md from '../src/markdown/index';
+import { text } from '../src/markdown/index';
+import * as notion from '../src/notion/index';
+import { parseBlocks, parseRichText } from '../src/parser/internal';
 describe('gfm parser', () => {
     it('should parse paragraph with nested annotations', () => {
         const ast = md.root(md.paragraph(md.text('Hello '), md.emphasis(md.text('world '), md.strong(md.text('foo'))), md.text('! '), md.inlineCode('code')));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([
                 notion.richText('Hello '),
@@ -46,7 +25,7 @@ describe('gfm parser', () => {
     });
     it('should parse text with hrefs and annotations', () => {
         const ast = md.root(md.paragraph(md.text('hello world '), md.link('https://example.com', md.text('this is a '), md.emphasis(md.text('url'))), md.text(' end')));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([
                 notion.richText('hello world '),
@@ -64,7 +43,7 @@ describe('gfm parser', () => {
     });
     it('should parse thematic breaks', () => {
         const ast = md.root(md.paragraph(md.text('hello')), md.thematicBreak(), md.paragraph(md.text('world')));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([notion.richText('hello')]),
             notion.paragraph([notion.richText('world')]),
@@ -73,7 +52,7 @@ describe('gfm parser', () => {
     });
     it('should parse headings', () => {
         const ast = md.root(md.heading(1, md.text('heading1')), md.heading(2, md.text('heading2')), md.heading(3, md.text('heading3')), md.heading(4, md.text('heading4')));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.headingOne([notion.richText('heading1')]),
             notion.headingTwo([notion.richText('heading2')]),
@@ -84,7 +63,7 @@ describe('gfm parser', () => {
     });
     it('should parse code block', () => {
         const ast = md.root(md.code('public class Foo {}', 'java'));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.code([notion.richText('public class Foo {}')], 'java'),
         ];
@@ -92,7 +71,7 @@ describe('gfm parser', () => {
     });
     it('should parse inline code', () => {
         const ast = md.root(md.paragraph(md.inlineCode('public class Foo {}')));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([
                 notion.richText('public class Foo {}', { annotations: { code: true } }),
@@ -102,7 +81,7 @@ describe('gfm parser', () => {
     });
     it('should parse block quote', () => {
         const ast = md.root(md.blockquote(md.heading(1, md.text('hello '), md.emphasis(md.text('world')))));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.headingOne([
                 notion.richText('hello '),
@@ -115,7 +94,7 @@ describe('gfm parser', () => {
     });
     it('should parse list', () => {
         const ast = md.root(md.paragraph(md.text('hello')), md.unorderedList(md.listItem(md.paragraph(md.text('a'))), md.listItem(md.paragraph(md.emphasis(md.text('b')))), md.listItem(md.paragraph(md.strong(md.text('c'))))), md.orderedList(md.listItem(md.paragraph(md.text('d')))));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([notion.richText('hello')]),
             notion.bulletedListItem([notion.richText('a')]),
@@ -131,7 +110,7 @@ describe('gfm parser', () => {
     });
     it('should parse github extensions', () => {
         const ast = md.root(md.paragraph(md.link('https://example.com', md.text('https://example.com'))), md.paragraph(md.strikethrough(md.text('strikethrough content'))), md.table(md.tableRow(md.tableCell(md.text('a')), md.tableCell(md.text('b')), md.tableCell(md.text('c')), md.tableCell(md.text('d')))), md.unorderedList(md.checkedListItem(false, md.paragraph(md.text('to do'))), md.checkedListItem(true, md.paragraph(md.text('done')))));
-        const actual = (0, internal_1.parseBlocks)(ast);
+        const actual = parseBlocks(ast);
         const expected = [
             notion.paragraph([
                 notion.richText('https://example.com', {
@@ -149,8 +128,8 @@ describe('gfm parser', () => {
         expect(actual).toStrictEqual(expected);
     });
     it('should parse rich text', () => {
-        const ast = md.root(md.paragraph(md.text('a'), md.strong(md.emphasis(md.text('b')), md.text('c')), md.link('https://example.com', (0, markdown_1.text)('d'))));
-        const actual = (0, internal_1.parseRichText)(ast);
+        const ast = md.root(md.paragraph(md.text('a'), md.strong(md.emphasis(md.text('b')), md.text('c')), md.link('https://example.com', text('d'))));
+        const actual = parseRichText(ast);
         const expected = [
             notion.richText('a'),
             notion.richText('b', { annotations: { italic: true, bold: true } }),

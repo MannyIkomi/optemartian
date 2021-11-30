@@ -1,38 +1,15 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseRichText = exports.parseBlocks = void 0;
-const notion = __importStar(require("../notion"));
+import * as notion from '../notion';
 function parseInline(element, options) {
-    var _a, _b;
     const copy = {
         type: 'text',
         annotations: {
-            ...((_a = options === null || options === void 0 ? void 0 : options.annotations) !== null && _a !== void 0 ? _a : {}),
+            ...(options?.annotations ?? {}),
         },
-        url: options === null || options === void 0 ? void 0 : options.url,
+        url: options?.url,
     };
     switch (element.type) {
         case 'image':
-            return [notion.richText((_b = element.title) !== null && _b !== void 0 ? _b : element.url, copy)];
+            return [notion.richText(element.title ?? element.url, copy)];
         case 'text':
             return [notion.richText(element.value, copy)];
         case 'delete':
@@ -113,16 +90,14 @@ function parseNode(node) {
             return [];
     }
 }
-function parseBlocks(root) {
+export function parseBlocks(root) {
     return root.children.flatMap(parseNode);
 }
-exports.parseBlocks = parseBlocks;
-function parseRichText(root) {
+export function parseRichText(root) {
     if (root.children.length !== 1 || root.children[0].type !== 'paragraph') {
         throw new Error(`Unsupported markdown element: ${JSON.stringify(root)}`);
     }
     const paragraph = root.children[0];
     return paragraph.children.flatMap(child => parseInline(child));
 }
-exports.parseRichText = parseRichText;
 //# sourceMappingURL=internal.js.map

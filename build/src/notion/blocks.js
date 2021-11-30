@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.toDo = exports.numberedListItem = exports.bulletedListItem = exports.headingThree = exports.headingTwo = exports.headingOne = exports.paragraph = exports.code = void 0;
-function code(text, lang) {
+export function code(text, lang) {
     // captions?
     return {
         object: 'block',
@@ -12,8 +9,7 @@ function code(text, lang) {
         },
     };
 }
-exports.code = code;
-function paragraph(text) {
+export function paragraph(text) {
     return {
         object: 'block',
         type: 'paragraph',
@@ -22,8 +18,7 @@ function paragraph(text) {
         },
     };
 }
-exports.paragraph = paragraph;
-function headingOne(text) {
+export function headingOne(text) {
     return {
         object: 'block',
         type: 'heading_1',
@@ -32,8 +27,7 @@ function headingOne(text) {
         },
     };
 }
-exports.headingOne = headingOne;
-function headingTwo(text) {
+export function headingTwo(text) {
     return {
         object: 'block',
         type: 'heading_2',
@@ -42,8 +36,7 @@ function headingTwo(text) {
         },
     };
 }
-exports.headingTwo = headingTwo;
-function headingThree(text) {
+export function headingThree(text) {
     return {
         object: 'block',
         type: 'heading_3',
@@ -52,8 +45,7 @@ function headingThree(text) {
         },
     };
 }
-exports.headingThree = headingThree;
-function bulletedListItem(text) {
+export function bulletedListItem(text) {
     return {
         object: 'block',
         type: 'bulleted_list_item',
@@ -62,8 +54,7 @@ function bulletedListItem(text) {
         },
     };
 }
-exports.bulletedListItem = bulletedListItem;
-function numberedListItem(text) {
+export function numberedListItem(text) {
     return {
         object: 'block',
         type: 'numbered_list_item',
@@ -72,8 +63,7 @@ function numberedListItem(text) {
         },
     };
 }
-exports.numberedListItem = numberedListItem;
-function toDo(checked, text) {
+export function toDo(checked, text) {
     return {
         object: 'block',
         type: 'to_do',
@@ -83,5 +73,4 @@ function toDo(checked, text) {
         },
     };
 }
-exports.toDo = toDo;
 //# sourceMappingURL=blocks.js.map

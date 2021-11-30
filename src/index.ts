@@ -1,9 +1,9 @@
 import unified from 'unified';
 
 import markdown from 'remark-parse';
-import * as notion from './notion';
+import * as notion from './notion/index';
 import {parseBlocks, parseRichText} from './parser/internal';
-import type * as md from './markdown';
+import type * as md from './markdown/index';
 import gfm from 'remark-gfm';
 
 // import * as notion from './notion';

@@ -1,23 +1,7 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.markdownToRichText = exports.markdownToBlocks = void 0;
-const unified_1 = __importDefault(require("unified"));
-const remark_parse_1 = __importDefault(require("remark-parse"));
-const internal_1 = require("./parser/internal");
-const remark_gfm_1 = __importDefault(require("remark-gfm"));
+import unified from 'unified';
+import markdown from 'remark-parse';
+import { parseBlocks, parseRichText } from './parser/internal';
+import gfm from 'remark-gfm';
 // import * as notion from './notion';
 /**
  * Parses Markdown content into Notion Blocks.
@@ -36,21 +20,20 @@ const remark_gfm_1 = __importDefault(require("remark-gfm"));
  *
  * @param body any Markdown or GFM content
  */
-function markdownToBlocks(body) {
-    const root = (0, unified_1.default)().use(remark_parse_1.default).use(remark_gfm_1.default).parse(body);
-    return (0, internal_1.parseBlocks)(root);
+export function markdownToBlocks(body) {
+    const root = unified().use(markdown).use(gfm).parse(body);
+    return parseBlocks(root);
 }
-exports.markdownToBlocks = markdownToBlocks;
 /**
  * Parses inline Markdown content into Notion RichText objects.
  * Only supports plain text, italics, bold, strikethrough, inline code, and hyperlinks.
  *
  * @param text any inline Markdown or GFM content
  */
-function markdownToRichText(text) {
+export function markdownToRichText(text) {
     // intercept markdown strings here
     // check for string including a user mention
-    const root = (0, unified_1.default)().use(remark_parse_1.default).use(remark_gfm_1.default).parse(text);
+    const root = unified().use(markdown).use(gfm).parse(text);
     /* const withUserMentions = tree =>
       map(tree, node => {
         if (node.type === 'link') {
@@ -77,9 +60,8 @@ function markdownToRichText(text) {
           }
         }
       }); */
-    const richText = (0, internal_1.parseRichText)(root);
+    const richText = parseRichText(root);
     return richText;
 }
-exports.markdownToRichText = markdownToRichText;
-__exportStar(require("./plugin"), exports);
+export * from './plugin';
 //# sourceMappingURL=index.js.map

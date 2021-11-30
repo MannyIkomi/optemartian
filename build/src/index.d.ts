@@ -1,4 +1,4 @@
-import * as notion from './notion';
+import * as notion from './notion/index';
 /**
  * Parses Markdown content into Notion Blocks.
  * - Supports all heading types (heading depths 4, 5, 6 are treated as 3 for Notion)
