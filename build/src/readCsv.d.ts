@@ -1,1 +1,1 @@
-export function readCsv(filePath?: string, config?: {}): Promise<any>;
+export declare function readCsv(filePath?: string, config?: {}): Promise<unknown>;

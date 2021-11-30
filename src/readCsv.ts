@@ -1,5 +1,4 @@
-import * as fs from 'fs';
-import * as path from 'path';
+// @ts-nocheck
 import * as csv from 'fast-csv';
 
 // import {dirname} from 'path';

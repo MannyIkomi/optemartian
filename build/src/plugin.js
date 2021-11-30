@@ -1,5 +1,6 @@
-import * as notion from './notion/index.ts';
-import { readCsv } from './readCsv.js';
+// @ts-nocheck
+import * as notion from './notion';
+import { readCsv } from './readCsv';
 export async function withUserMentions(notionBlocks = [], csvDirectory = 'discordteam.csv') {
     return Promise.all(notionBlocks.map(async (block) => {
         if (block.paragraph && block.type === 'paragraph') {

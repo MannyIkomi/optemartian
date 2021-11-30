@@ -1,2 +1,3 @@
-export function withUserMentions(notionBlocks?: any[], csvDirectory?: string): Promise<any[]>;
-export function swapUserMentions(richTextAst?: any[], csvDirectory?: string): Promise<any[] | undefined>;
+import * as notion from './notion';
+export declare function withUserMentions(notionBlocks?: never[], csvDirectory?: string): Promise<any[]>;
+export declare function swapUserMentions(richTextAst?: never[], csvDirectory?: string): Promise<notion.RichText[] | undefined>;

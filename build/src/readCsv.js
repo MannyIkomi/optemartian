@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as csv from 'fast-csv';
 // import {dirname} from 'path';
 // import {fileURLToPath} from 'url';

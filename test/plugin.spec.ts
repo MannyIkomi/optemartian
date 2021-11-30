@@ -1,6 +1,6 @@
-import {markdownToRichText, markdownToBlocks} from '../src/index.ts';
-import {withUserMentions, swapUserMentions} from '../src/plugin.js';
-import {readCsv} from '../src/readCsv.js';
+// @ts-nocheck
+import {markdownToRichText, markdownToBlocks} from '../src/index';
+import {withUserMentions, swapUserMentions} from '../src/plugin';
 
 describe('with User Mentions Plugin', () => {
   it('Converts matching links inside Block[] to user mentions', async () => {
@@ -93,7 +93,7 @@ describe('with User Mentions Plugin', () => {
     return expect(received).resolves.toStrictEqual(expected);
   });
 });
-/* 
+/*
 describe('CSV parsing', () => {
   it('returns rows of data', async () => {
     const received = await readCsv('discordteam.csv', {
