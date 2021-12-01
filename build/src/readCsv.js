@@ -1,16 +1,16 @@
 import * as csv from 'fast-csv';
-export function readCsv(filePath = '', config) {
+export function readCsv(filepath = '', config) {
     const { csvOptions, rowTransformer } = config;
-    if (!filePath) {
+    if (!filepath) {
         throw new Error(`filePath is required`);
     }
     return new Promise((resolve, reject) => {
         const collectedRows = [];
         csv
-            .parseFile(filePath, csvOptions)
+            .parseFile(filepath, csvOptions)
             .on('error', reject)
             .on('data', row => {
-            const transformedRow = rowTransformer(row);
+            const transformedRow = csvOptions.rowTransformer(row);
             transformedRow && collectedRows.push(transformedRow);
         })
             .on('end', rowCount => {

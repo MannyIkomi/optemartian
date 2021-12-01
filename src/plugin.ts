@@ -10,21 +10,24 @@ export interface pluginConfig {
   csvDirectory?: string;
   files?: file[];
   userDirectory?: directory[];
+  csvOptions?: Object;
   linkSubstring?: string;
   onMatchedPage?: (data: Object) => any | void;
 }
 
-export async function withPageMentions(notionBlocks, config: pluginConfig) {
+export async function withPageMentions(
+  notionBlocks: Block[],
+  config: pluginConfig
+) {
   // {linkSubstring, files, onMissingPage} = options
   return Promise.all(
     notionBlocks.map(async block => {
-      if (block.paragraph && block.type === 'paragraph') {
+      if (block.type === 'paragraph' && block.paragraph) {
         const richText = block.paragraph.text;
         // console.log(richText);
-        return {
-          ...block,
+        return Object.assign(block, {
           paragraph: {text: await swapPageMentions(richText, config)},
-        };
+        }) as Block;
       }
       return block;
     })
@@ -35,19 +38,19 @@ export async function withUserMentions(
   notionBlocks: Block[],
   config: pluginConfig
 ) {
-  return Promise.all(
-    notionBlocks.map(async block => {
-      if (block.type === 'paragraph' && block.paragraph) {
-        const richText = block.paragraph.text;
-        // console.log(richText);
-        return {
-          ...block,
-          paragraph: {text: await swapUserMentions(richText, config)},
-        } as Block;
-      }
-      return block as Block;
-    })
-  );
+  return notionBlocks.map(async block => {
+    if (block.type === 'paragraph' && block.paragraph) {
+      const richText = block.paragraph.text;
+      const {paragraph} = block;
+      // console.log(richText);
+      return Object.assign(block, {
+        paragraph: {
+          text: await swapUserMentions(richText, config),
+        },
+      }) as Block;
+    }
+    return block as Block;
+  });
 }
 
 export async function swapPageMentions(
@@ -88,9 +91,9 @@ export async function swapPageMentions(
 
           if (matchedPage.filepath) {
             // create the page using the markdownfile found
-            onMatchedPage && onMatchedPage({matchedPage, ast, config});
+            return onMatchedPage && onMatchedPage({matchedPage, ast, config});
 
-            return; //notion.richTextMention({})
+            //notion.richTextMention({})
             // use returned created page to create the richTextMention inline
             // if so create the page before the mention using {onMissingPage}
           }
@@ -111,52 +114,38 @@ export async function swapUserMentions(
 ) {
   const {csvDirectory} = config;
   try {
-    return Promise.all(
-      richTextAst.flatMap(async ast => {
-        const hasLink = ast.type === 'text' && ast.text.link;
-        if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
-          console.log(ast);
+    return richTextAst.flatMap(async ast => {
+      const hasLink = ast.type === 'text' && ast.text.link;
+      if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
+        console.log(ast);
 
-          const mention = ast.text;
-          const userDirectory = await readCsv(csvDirectory, {
-            csvOptions: {
-              delimiter: ';',
-              ignoreEmpty: true,
-              headers: true,
-              objectMode: true,
-            },
-            rowTransformer: row => ({
-              email: row.email,
-              name: row.text,
-              profile: row.profile_url,
-            }),
-          });
+        const mention = ast.text;
+        const userDirectory = await readCsv(csvDirectory, config);
 
-          const matchedUser = await notion.findMatchingUser(mention, {
-            userDirectory,
-          });
+        const matchedUser = await notion.findMatchingUser(mention, {
+          userDirectory,
+        });
 
-          if (!matchedUser) {
-            console.warn(
-              `Could not find matching user for ${JSON.stringify(mention)}`
-            );
-            return ast as RichText;
-          }
-
-          console.log('MATCHED NOTION USER:', matchedUser);
-
-          return notion.richTextMention({
-            type: 'user',
-            user: {
-              object: 'user',
-              // name: matchedUser.name,
-              id: matchedUser.id,
-            },
-          }) as RichText;
+        if (!matchedUser) {
+          console.warn(
+            `Could not find matching user for ${JSON.stringify(mention)}`
+          );
+          return ast as RichText;
         }
-        return ast as RichText;
-      })
-    );
+
+        console.log('MATCHED NOTION USER:', matchedUser);
+
+        return notion.richTextMention({
+          type: 'user',
+          user: {
+            object: 'user',
+            // name: matchedUser.name,
+            id: matchedUser.id,
+          },
+        }) as RichText;
+      }
+      return ast as RichText;
+    });
   } catch (err) {
     console.error(err);
     return;

@@ -4,6 +4,18 @@ import { withUserMentions, swapUserMentions, withPageMentions, swapPageMentions,
 describe('with User Mentions Plugin', () => {
     const userMentionOptions = {
         linkSubstring: 'https://slab.discord.tools/users',
+        csvDirectory: './discordteam.csv',
+        csvOptions: {
+            delimiter: ';',
+            ignoreEmpty: true,
+            headers: true,
+            objectMode: true,
+            rowTransformer: row => ({
+                email: row.email,
+                name: row.text,
+                profile: row.profile_url,
+            }),
+        },
     };
     it('Converts matching links inside Block[] to user mentions', async () => {
         const text = 'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
