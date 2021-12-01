@@ -44,7 +44,7 @@ export async function swapUserMentions(richTextAst = [], csvDirectory = 'discord
                     type: 'user',
                     user: {
                         object: 'user',
-                        name: matchedUser.name,
+                        // name: matchedUser.name,
                         id: matchedUser.id,
                     },
                 });

@@ -67,7 +67,7 @@ export async function swapUserMentions(
             type: 'user',
             user: {
               object: 'user',
-              name: matchedUser.name,
+              // name: matchedUser.name,
               id: matchedUser.id,
             },
           });
