@@ -1,5 +1,5 @@
 import * as csv from 'fast-csv';
-
+import type ParserOptionsArgs from 'fast-csv';
 // import {dirname} from 'path';
 // import {fileURLToPath} from 'url';
 // const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -1,6 +1,7 @@
 import * as notion from './notion';
 import {Block, RichText, RichTextMention, RichTextText} from './notion';
 import {directory, readCsv} from './readCsv';
+import type ParserOptionArgs from 'fast-csv';
 
 export interface file {
   filepath: string;

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {markdownToRichText, markdownToBlocks} from '../src/index';
+import {notionClient, richTextMention} from '../src/notion';
 import {
   withUserMentions,
   swapUserMentions,
@@ -133,8 +134,14 @@ describe('with Page Mentions Plugin', () => {
           '/Users/Manny/Documents/Freelance Client Files/Optemization/optemartian/src/TEST MATCH Discord 2020 Year In Review.md',
       },
     ],
-    onMatchedPage: data => {
-      console.log('MISSING PAGE DATA:', data);
+    onMatchedPage: () => {
+      return richTextMention({
+        type: 'page',
+        page: {
+          id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
+          object: 'page',
+        },
+      });
     },
   };
 
