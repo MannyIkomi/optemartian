@@ -1,7 +1,6 @@
-// @ts-nocheck
 import * as notion from './notion';
 import { readCsv } from './readCsv';
-export async function withPageMentions(notionBlocks = [], config) {
+export async function withPageMentions(notionBlocks, config) {
     // {linkSubstring, files, onMissingPage} = options
     return Promise.all(notionBlocks.map(async (block) => {
         if (block.paragraph && block.type === 'paragraph') {
@@ -15,25 +14,25 @@ export async function withPageMentions(notionBlocks = [], config) {
         return block;
     }));
 }
-export async function withUserMentions(notionBlocks = [], csvDirectory = 'discordteam.csv') {
+export async function withUserMentions(notionBlocks, config) {
     return Promise.all(notionBlocks.map(async (block) => {
-        if (block.paragraph && block.type === 'paragraph') {
+        if (block.type === 'paragraph' && block.paragraph) {
             const richText = block.paragraph.text;
             // console.log(richText);
             return {
                 ...block,
-                paragraph: { text: await swapUserMentions(richText, csvDirectory) },
+                paragraph: { text: await swapUserMentions(richText, config) },
             };
         }
         return block;
     }));
 }
-export async function swapPageMentions(richTextAst = [], config) {
+export async function swapPageMentions(richTextAst, config) {
     const { linkSubstring, onMatchedPage } = config;
     try {
         return Promise.all(richTextAst.flatMap(async (ast) => {
-            const hasLink = ast.type === 'text' && ast.text.link;
-            if (hasLink && hasLink.url.includes(linkSubstring)) {
+            const hasLink = ast?.type === 'text' && ast?.text.link;
+            if (hasLink && linkSubstring && hasLink.url.includes(linkSubstring)) {
                 console.log(ast);
                 const mention = ast.text;
                 // Query for first matching page
@@ -49,15 +48,14 @@ export async function swapPageMentions(richTextAst = [], config) {
                     return notion.richTextMention({
                         type: 'page',
                         page: {
-                            object: 'page',
-                            // name: matchedUser.name,
                             id: matchedPage.page.id,
                         },
                     });
                 }
                 if (matchedPage.filepath) {
                     // create the page using the markdownfile found
-                    onMatchedPage(matchedPage);
+                    onMatchedPage && onMatchedPage({ matchedPage, ast, config });
+                    return; //notion.richTextMention({})
                     // use returned created page to create the richTextMention inline
                     // if so create the page before the mention using {onMissingPage}
                 }
@@ -67,9 +65,11 @@ export async function swapPageMentions(richTextAst = [], config) {
     }
     catch (err) {
         console.error(err);
+        return;
     }
 }
-export async function swapUserMentions(richTextAst = [], csvDirectory = 'discordteam.csv') {
+export async function swapUserMentions(richTextAst, config) {
+    const { csvDirectory } = config;
     try {
         return Promise.all(richTextAst.flatMap(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
@@ -89,9 +89,11 @@ export async function swapUserMentions(richTextAst = [], csvDirectory = 'discord
                         profile: row.profile_url,
                     }),
                 });
-                const matchedUser = await notion.findMatchingUser(mention, userDirectory);
+                const matchedUser = await notion.findMatchingUser(mention, {
+                    userDirectory,
+                });
                 if (!matchedUser) {
-                    console.warn(`Could not find matching user for ${JSON.stringify(mention)} at ${hasLink.url}`);
+                    console.warn(`Could not find matching user for ${JSON.stringify(mention)}`);
                     return ast;
                 }
                 console.log('MATCHED NOTION USER:', matchedUser);
@@ -109,6 +111,7 @@ export async function swapUserMentions(richTextAst = [], csvDirectory = 'discord
     }
     catch (err) {
         console.error(err);
+        return;
     }
 }
 //# sourceMappingURL=plugin.js.map

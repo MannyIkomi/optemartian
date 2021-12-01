@@ -5,13 +5,20 @@ import {
   swapUserMentions,
   withPageMentions,
   swapPageMentions,
+  pluginConfig,
 } from '../src/plugin';
 
 describe('with User Mentions Plugin', () => {
+  const userMentionOptions: pluginConfig = {
+    linkSubstring: 'https://slab.discord.tools/users',
+  };
   it('Converts matching links inside Block[] to user mentions', async () => {
     const text =
       'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
-    const received = withUserMentions(markdownToBlocks(text));
+    const received = withUserMentions(
+      markdownToBlocks(text),
+      userMentionOptions
+    );
 
     const expected = [
       {
@@ -60,7 +67,10 @@ describe('with User Mentions Plugin', () => {
     const text =
       'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
 
-    const received = swapUserMentions(markdownToRichText(text));
+    const received = swapUserMentions(
+      markdownToRichText(text),
+      userMentionOptions
+    );
     const expected = [
       {
         annotations: {
@@ -99,7 +109,7 @@ describe('with User Mentions Plugin', () => {
 });
 describe('with Page Mentions Plugin', () => {
   // setup
-  const pageMentionOptions = {
+  const pageMentionOptions: pluginConfig = {
     linkSubstring: 'https://slab.discord.tools/posts',
     files: [
       {

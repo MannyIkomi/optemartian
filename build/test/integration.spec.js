@@ -48,7 +48,7 @@ describe('find matching user', () => {
         const actual = await notion.findMatchingUser({
             content: 'Val',
             link: { url: 'https://slab.discord.tools/users/0groiz7t' },
-        });
+        }, { linkSubstring: 'slab.discord.tools/users' });
         const expected = {
             type: 'person',
             name: 'Val',

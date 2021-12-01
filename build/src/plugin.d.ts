@@ -1,5 +1,17 @@
 import * as notion from './notion';
-export declare function withPageMentions(notionBlocks: never[] | undefined, config: any): Promise<any[]>;
-export declare function withUserMentions(notionBlocks?: never[], csvDirectory?: string): Promise<any[]>;
-export declare function swapPageMentions(richTextAst: never[] | undefined, config: any): Promise<notion.RichText[] | undefined>;
-export declare function swapUserMentions(richTextAst?: never[], csvDirectory?: string): Promise<notion.RichText[] | undefined>;
+import { Block, RichText } from './notion';
+import { directory } from './readCsv';
+export interface file {
+    filepath: string;
+}
+export interface pluginConfig {
+    csvDirectory?: string;
+    files?: file[];
+    userDirectory?: directory[];
+    linkSubstring?: string;
+    onMatchedPage?: (data: Object) => any | void;
+}
+export declare function withPageMentions(notionBlocks: any, config: pluginConfig): Promise<[unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown]>;
+export declare function withUserMentions(notionBlocks: Block[], config: pluginConfig): Promise<notion.Block[]>;
+export declare function swapPageMentions(richTextAst: RichText[], config: pluginConfig): Promise<(notion.RichText | undefined)[] | undefined>;
+export declare function swapUserMentions(richTextAst: RichText[], config: pluginConfig): Promise<notion.RichText[] | undefined>;

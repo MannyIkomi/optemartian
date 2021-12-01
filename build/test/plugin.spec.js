@@ -2,9 +2,12 @@
 import { markdownToRichText, markdownToBlocks } from '../src/index';
 import { withUserMentions, swapUserMentions, withPageMentions, swapPageMentions, } from '../src/plugin';
 describe('with User Mentions Plugin', () => {
+    const userMentionOptions = {
+        linkSubstring: 'https://slab.discord.tools/users',
+    };
     it('Converts matching links inside Block[] to user mentions', async () => {
         const text = 'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
-        const received = withUserMentions(markdownToBlocks(text));
+        const received = withUserMentions(markdownToBlocks(text), userMentionOptions);
         const expected = [
             {
                 object: 'block',
@@ -49,7 +52,7 @@ describe('with User Mentions Plugin', () => {
     });
     it('Converts matching links inside RichText[] to user mentions', async () => {
         const text = 'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
-        const received = swapUserMentions(markdownToRichText(text));
+        const received = swapUserMentions(markdownToRichText(text), userMentionOptions);
         const expected = [
             {
                 annotations: {

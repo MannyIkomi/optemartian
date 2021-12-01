@@ -1,9 +1,8 @@
-// @ts-nocheck
 import {Client} from '@notionhq/client';
 import path from 'path';
 import dotenv from 'dotenv';
-import {PageMention, PersonUser} from '.';
-import {openStdin} from 'process';
+import {PageMention, PersonUser, RichTextText, RichText} from '.';
+import {pluginConfig} from '../plugin';
 dotenv.config();
 
 const VAL_NOTION_API_KEY = process.env.VAL_NOTION_API_KEY;
@@ -17,36 +16,37 @@ export async function getWorkspaceUsers() {
     return results;
   } catch (error) {
     console.error(error);
+    return;
   }
 }
-export async function queryWorkspace(string: String) {
+export async function queryWorkspace(text: string) {
   try {
     return notionClient.search({
-      query: string,
+      query: text,
     });
   } catch (err) {
     console.error(err);
+    return;
   }
 }
 
-export async function findMatchingUser(mention = {}, userDirectory = []) {
-  if (!mention) {
+export async function findMatchingUser(richTextLink, options: pluginConfig) {
+  const {userDirectory} = options;
+  if (!richTextLink) {
     throw new Error('🚨 Please pass a mention object');
   }
   const notionUsers = await getWorkspaceUsers();
-  const mentionName = mention.content;
-  const mentionLink = mention.link.url;
+  const mentionName = richTextLink?.content;
+  const mentionLink = richTextLink?.link.url;
 
   if (userDirectory && userDirectory.length > 0) {
     const userIdRegex = /\w+$/gm;
     let profileId;
-    const fromUserDirectory = userDirectory.find(
-      ({name = '', profile = ''}) => {
-        profileId = mentionLink.match(userIdRegex)[0];
+    const fromUserDirectory = userDirectory.find(({profile}) => {
+      profileId = mentionLink.match(userIdRegex)[0];
 
-        return profile.includes(profileId);
-      }
-    );
+      return profile.includes(profileId);
+    });
     if (!fromUserDirectory) {
       return false;
     }
@@ -54,19 +54,23 @@ export async function findMatchingUser(mention = {}, userDirectory = []) {
     console.log('PROFILE ID:', profileId);
     console.log('DIRECTORY MATCH:', fromUserDirectory);
 
-    const foundUser = notionUsers.find(({name}) =>
-      fromUserDirectory.name.toUpperCase().includes(name.toUpperCase())
-    );
+    const foundUser = notionUsers?.find(({name}) => {
+      if (!name) {
+        console.warn('Notion Users.name was undefined');
+        return false;
+      }
+      return fromUserDirectory.name.toUpperCase().includes(name.toUpperCase());
+    });
     return foundUser as PersonUser;
   }
 
-  const foundUser = notionUsers.find(
-    ({name}) => name.toUpperCase() === mentionName.toUpperCase() // case-insensitive
+  const foundUser = notionUsers?.find(
+    ({name}) => name?.toUpperCase() === mentionName.toUpperCase() // case-insensitive
   );
   return foundUser as PersonUser;
 }
 
-export async function findMatchingPage(link, options) {
+export async function findMatchingPage(link, options: pluginConfig) {
   const {files} = options;
 
   if (!link) {
@@ -78,7 +82,7 @@ export async function findMatchingPage(link, options) {
   console.log('QUERY RESULTS:', searchQuery);
   console.log('FILES:', files);
 
-  if (searchQuery.results.length > 1) {
+  if (searchQuery && searchQuery.results.length > 1) {
     console.warn(
       '⚠️ The search query returned more than result, the first one will be used.',
       `May need to check for duplicates: ${JSON.stringify(searchQuery)}`
@@ -106,8 +110,8 @@ export async function findMatchingPage(link, options) {
     return {filepath: foundInFolder.filepath};
   }
 
-  if (searchQuery?.results.length > 0) {
-    const firstQueryMatch = searchQuery.results[0];
+  if (searchQuery && searchQuery.results.length > 0) {
+    const firstQueryMatch = searchQuery?.results[0];
     return {page: firstQueryMatch};
   }
 

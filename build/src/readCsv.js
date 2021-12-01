@@ -1,9 +1,5 @@
-// @ts-nocheck
 import * as csv from 'fast-csv';
-// import {dirname} from 'path';
-// import {fileURLToPath} from 'url';
-// const __dirname = dirname(fileURLToPath(import.meta.url));
-export function readCsv(filePath = '', config = {}) {
+export function readCsv(filePath = '', config) {
     const { csvOptions, rowTransformer } = config;
     if (!filePath) {
         throw new Error(`filePath is required`);

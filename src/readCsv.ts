@@ -1,18 +1,21 @@
-// @ts-nocheck
 import * as csv from 'fast-csv';
 
 // import {dirname} from 'path';
 // import {fileURLToPath} from 'url';
 // const __dirname = dirname(fileURLToPath(import.meta.url));
+export interface directory {
+  profile: string;
+  name: string;
+}
 
-export function readCsv(filePath = '', config = {}) {
+export function readCsv(filePath = '', config: any) {
   const {csvOptions, rowTransformer} = config;
   if (!filePath) {
     throw new Error(`filePath is required`);
   }
 
   return new Promise((resolve, reject) => {
-    const collectedRows = [];
+    const collectedRows: Array<directory> = [];
     csv
       .parseFile(filePath, csvOptions)
       .on('error', reject)
@@ -24,5 +27,5 @@ export function readCsv(filePath = '', config = {}) {
         resolve(collectedRows);
         console.log(`Parsed ${rowCount} rows`);
       });
-  });
+  }) as Promise<directory[]>;
 }
