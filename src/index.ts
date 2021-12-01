@@ -76,4 +76,4 @@ export function markdownToRichText(text: string): notion.RichText[] {
   return richText;
 }
 
-export * from './plugin';
+export * as plugin from './plugin';

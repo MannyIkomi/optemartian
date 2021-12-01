@@ -63,5 +63,5 @@ export function markdownToRichText(text) {
     const richText = parseRichText(root);
     return richText;
 }
-export * from './plugin';
+export * as plugin from './plugin';
 //# sourceMappingURL=index.js.map
