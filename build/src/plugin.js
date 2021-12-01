@@ -1,11 +1,25 @@
 // @ts-nocheck
 import * as notion from './notion';
 import { readCsv } from './readCsv';
+export async function withPageMentions(notionBlocks = [], config) {
+    // {linkSubstring, files, onMissingPage} = options
+    return Promise.all(notionBlocks.map(async (block) => {
+        if (block.paragraph && block.type === 'paragraph') {
+            const richText = block.paragraph.text;
+            // console.log(richText);
+            return {
+                ...block,
+                paragraph: { text: await swapPageMentions(richText, config) },
+            };
+        }
+        return block;
+    }));
+}
 export async function withUserMentions(notionBlocks = [], csvDirectory = 'discordteam.csv') {
     return Promise.all(notionBlocks.map(async (block) => {
         if (block.paragraph && block.type === 'paragraph') {
             const richText = block.paragraph.text;
-            console.log(richText);
+            // console.log(richText);
             return {
                 ...block,
                 paragraph: { text: await swapUserMentions(richText, csvDirectory) },
@@ -13,6 +27,47 @@ export async function withUserMentions(notionBlocks = [], csvDirectory = 'discor
         }
         return block;
     }));
+}
+export async function swapPageMentions(richTextAst = [], config) {
+    const { linkSubstring, onMatchedPage } = config;
+    try {
+        return Promise.all(richTextAst.flatMap(async (ast) => {
+            const hasLink = ast.type === 'text' && ast.text.link;
+            if (hasLink && hasLink.url.includes(linkSubstring)) {
+                console.log(ast);
+                const mention = ast.text;
+                // Query for first matching page
+                // if query is empty, check the {folderpath} for a matching title
+                const matchedPage = await notion.findMatchingPage(mention, config);
+                if (!matchedPage) {
+                    // if no page found, return original ast early, with console warning
+                    console.warn(`Could not find matching page for: ${JSON.stringify(mention)}}`);
+                    return ast;
+                }
+                if (matchedPage.page) {
+                    console.log('PAGE EXISTED IN NOTION:', matchedPage.page);
+                    return notion.richTextMention({
+                        type: 'page',
+                        page: {
+                            object: 'page',
+                            // name: matchedUser.name,
+                            id: matchedPage.page.id,
+                        },
+                    });
+                }
+                if (matchedPage.filepath) {
+                    // create the page using the markdownfile found
+                    onMatchedPage(matchedPage);
+                    // use returned created page to create the richTextMention inline
+                    // if so create the page before the mention using {onMissingPage}
+                }
+            }
+            return ast;
+        }));
+    }
+    catch (err) {
+        console.error(err);
+    }
 }
 export async function swapUserMentions(richTextAst = [], csvDirectory = 'discordteam.csv') {
     try {
