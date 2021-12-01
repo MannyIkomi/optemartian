@@ -33,9 +33,8 @@ export async function findMatchingUser(mention = {}, userDirectory = []) {
       ({name = '', profile = ''}) => {
         const profileId = mentionLink.match(userIdRegex)[0];
         console.log('PROFILE ID:', profileId);
-        return profileId
-          ? profile.includes(profileId)
-          : name.includes(mentionName);
+
+        return profile.includes(profileId);
       }
     );
     console.log('DIRECTORY MATCH:', fromUserDirectory);
