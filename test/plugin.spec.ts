@@ -38,7 +38,6 @@ describe('with User Mentions Plugin', () => {
                 type: 'user',
                 user: {
                   id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
-                  name: 'Val',
                   object: 'user',
                 },
               },
@@ -82,7 +81,6 @@ describe('with User Mentions Plugin', () => {
           type: 'user',
           user: {
             id: 'e7e5a229-8349-46bb-a1e2-bb9d69469172',
-            name: 'Val',
             object: 'user',
           },
         },
