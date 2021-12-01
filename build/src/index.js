@@ -1,6 +1,6 @@
 import unified from 'unified';
 import markdown from 'remark-parse';
-import { parseBlocks, parseRichText } from './parser/internal';
+import * as internal from './parser/internal';
 import gfm from 'remark-gfm';
 // import * as notion from './notion';
 /**
@@ -22,7 +22,7 @@ import gfm from 'remark-gfm';
  */
 export function markdownToBlocks(body) {
     const root = unified().use(markdown).use(gfm).parse(body);
-    return parseBlocks(root);
+    return internal.parseBlocks(root);
 }
 /**
  * Parses inline Markdown content into Notion RichText objects.
@@ -60,7 +60,7 @@ export function markdownToRichText(text) {
           }
         }
       }); */
-    const richText = parseRichText(root);
+    const richText = internal.parseRichText(root);
     return richText;
 }
 export * as plugin from './plugin';
