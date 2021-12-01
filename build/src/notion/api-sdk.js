@@ -28,11 +28,11 @@ export async function findMatchingUser(mention = {}, userDirectory = []) {
             console.log('PROFILE ID:', profileId);
             return profile.includes(profileId);
         });
+        if (!fromUserDirectory) {
+            return false;
+        }
         console.log('DIRECTORY MATCH:', fromUserDirectory);
-        const foundUser = notionUsers.find(({ name }) => fromUserDirectory
-            ? fromUserDirectory.name.toUpperCase().includes(name.toUpperCase())
-            : name.toUpperCase() === mentionName.toUpperCase() // case-insensitiv
-        );
+        const foundUser = notionUsers.find(({ name }) => fromUserDirectory.name.toUpperCase().includes(name.toUpperCase()));
         return foundUser;
     }
     const foundUser = notionUsers.find(({ name }) => name.toUpperCase() === mentionName.toUpperCase() // case-insensitive
