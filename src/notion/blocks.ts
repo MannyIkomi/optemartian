@@ -17,7 +17,7 @@ export function code(text: RichText[], lang?: string | undefined): CodeBlock {
     type: 'code',
     code: {
       text,
-      language: lang,
+      language: lang || 'plain text',
     },
   } as CodeBlock;
 }

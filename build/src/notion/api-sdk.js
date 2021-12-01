@@ -23,14 +23,15 @@ export async function findMatchingUser(mention = {}, userDirectory = []) {
     const mentionLink = mention.link.url;
     if (userDirectory && userDirectory.length > 0) {
         const userIdRegex = /\w+$/gm;
+        let profileId;
         const fromUserDirectory = userDirectory.find(({ name = '', profile = '' }) => {
-            const profileId = mentionLink.match(userIdRegex)[0];
-            console.log('PROFILE ID:', profileId);
+            profileId = mentionLink.match(userIdRegex)[0];
             return profile.includes(profileId);
         });
         if (!fromUserDirectory) {
             return false;
         }
+        console.log('PROFILE ID:', profileId);
         console.log('DIRECTORY MATCH:', fromUserDirectory);
         const foundUser = notionUsers.find(({ name }) => fromUserDirectory.name.toUpperCase().includes(name.toUpperCase()));
         return foundUser;

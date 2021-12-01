@@ -5,7 +5,7 @@ export function code(text, lang) {
         type: 'code',
         code: {
             text,
-            language: lang,
+            language: lang || 'plain text',
         },
     };
 }

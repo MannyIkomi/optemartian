@@ -69,6 +69,14 @@ describe('gfm parser', () => {
         ];
         expect(actual).toStrictEqual(expected);
     });
+    it('should default to plain text code blocks', () => {
+        const ast = md.root(md.code('public class Foo {}', undefined));
+        const actual = parseBlocks(ast);
+        const expected = [
+            notion.code([notion.richText('public class Foo {}')], 'plain text'),
+        ];
+        expect(actual).toStrictEqual(expected);
+    });
     it('should parse inline code', () => {
         const ast = md.root(md.paragraph(md.inlineCode('public class Foo {}')));
         const actual = parseBlocks(ast);
