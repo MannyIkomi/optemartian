@@ -250,7 +250,7 @@ describe('with Page Mentions Plugin', () => {
     const text =
       'Page mention link [This page does not exist](https://slab.discord.tools/posts/c8r8u5i4)';
 
-    const received = await swapPageMentions(
+    const received = swapPageMentions(
       markdownToRichText(text),
       pageMentionOptions
     );
@@ -288,6 +288,6 @@ describe('with Page Mentions Plugin', () => {
       },
     ];
 
-    return expect(received).toStrictEqual(expected);
+    return expect(received).resolves.toStrictEqual(expected);
   });
 });

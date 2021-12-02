@@ -214,7 +214,7 @@ describe('with Page Mentions Plugin', () => {
     });
     it('Returns the original markdown if a matching page is not found', async () => {
         const text = 'Page mention link [This page does not exist](https://slab.discord.tools/posts/c8r8u5i4)';
-        const received = await swapPageMentions(markdownToRichText(text), pageMentionOptions);
+        const received = swapPageMentions(markdownToRichText(text), pageMentionOptions);
         const expected = [
             {
                 annotations: {
@@ -247,7 +247,7 @@ describe('with Page Mentions Plugin', () => {
                 type: 'text',
             },
         ];
-        return expect(received).toStrictEqual(expected);
+        return expect(received).resolves.toStrictEqual(expected);
     });
 });
 //# sourceMappingURL=plugin.spec.js.map

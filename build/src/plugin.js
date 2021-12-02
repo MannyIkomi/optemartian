@@ -2,7 +2,7 @@ import * as notion from './notion';
 import { readCsv } from './readCsv';
 export async function withPageMentions(notionBlocks, config) {
     const resolvedBlocks = await notionBlocks;
-    return resolvedBlocks.flatMap(async (block) => {
+    return Promise.all(resolvedBlocks.flatMap(async (block) => {
         if (block.type === 'paragraph' && block.paragraph) {
             const { paragraph } = block;
             const richText = block.paragraph.text;
@@ -15,11 +15,11 @@ export async function withPageMentions(notionBlocks, config) {
             });
         }
         return block;
-    });
+    }));
 }
 export async function withUserMentions(notionBlocks, config) {
     const resolvedBlocks = await notionBlocks;
-    return resolvedBlocks.flatMap(async (block) => {
+    return Promise.all(resolvedBlocks.flatMap(async (block) => {
         if (block.type === 'paragraph' && block.paragraph) {
             const { paragraph } = block;
             const richText = block.paragraph.text;
@@ -32,7 +32,7 @@ export async function withUserMentions(notionBlocks, config) {
             });
         }
         return block;
-    });
+    }));
 }
 export async function swapPageMentions(richTextAst, config) {
     const { linkMatcher, onMatchedPage } = config;

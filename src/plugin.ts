@@ -25,20 +25,22 @@ export async function withPageMentions(
   config: PluginConfig
 ) {
   const resolvedBlocks = await notionBlocks;
-  return resolvedBlocks.flatMap(async block => {
-    if (block.type === 'paragraph' && block.paragraph) {
-      const {paragraph} = block;
-      const richText = block.paragraph.text;
-      // console.log(richText);
-      return Object.assign(block, {
-        paragraph: {
-          ...paragraph,
-          text: await swapPageMentions(richText, config),
-        },
-      }) as Block;
-    }
-    return block as Block;
-  });
+  return Promise.all(
+    resolvedBlocks.flatMap(async block => {
+      if (block.type === 'paragraph' && block.paragraph) {
+        const {paragraph} = block;
+        const richText = block.paragraph.text;
+        // console.log(richText);
+        return Object.assign(block, {
+          paragraph: {
+            ...paragraph,
+            text: await swapPageMentions(richText, config),
+          },
+        }) as Block;
+      }
+      return block as Block;
+    })
+  ) as Promise<Block[]>;
 }
 
 export async function withUserMentions(
@@ -46,20 +48,22 @@ export async function withUserMentions(
   config: PluginConfig
 ) {
   const resolvedBlocks = await notionBlocks;
-  return resolvedBlocks.flatMap(async block => {
-    if (block.type === 'paragraph' && block.paragraph) {
-      const {paragraph} = block;
-      const richText = block.paragraph.text;
-      // console.log(richText);
-      return Object.assign(block, {
-        paragraph: {
-          ...paragraph,
-          text: await swapUserMentions(richText, config),
-        },
-      }) as Block;
-    }
-    return block as Block;
-  });
+  return Promise.all(
+    resolvedBlocks.flatMap(async block => {
+      if (block.type === 'paragraph' && block.paragraph) {
+        const {paragraph} = block;
+        const richText = block.paragraph.text;
+        // console.log(richText);
+        return Object.assign(block, {
+          paragraph: {
+            ...paragraph,
+            text: await swapUserMentions(richText, config),
+          },
+        }) as Block;
+      }
+      return block as Block;
+    })
+  ) as Promise<Block[]>;
 }
 
 export async function swapPageMentions(
