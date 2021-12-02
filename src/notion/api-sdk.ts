@@ -83,7 +83,7 @@ export async function findMatchingPage(link, options: PluginConfig) {
 
   if (searchQuery && searchQuery.results.length > 1) {
     console.warn(
-      '⚠️ The search query returned more than result, the first one will be used.',
+      `⚠️ The search query returned more than result for "${mentionName}", the first one will be used.`,
       `May need to check for duplicates: ${JSON.stringify(searchQuery)}`
     );
   }

@@ -69,7 +69,7 @@ export async function findMatchingPage(link, options) {
     console.log('QUERY RESULTS:', searchQuery);
     console.log('FILES:', files);
     if (searchQuery && searchQuery.results.length > 1) {
-        console.warn('⚠️ The search query returned more than result, the first one will be used.', `May need to check for duplicates: ${JSON.stringify(searchQuery)}`);
+        console.warn(`⚠️ The search query returned more than result for "${mentionName}", the first one will be used.`, `May need to check for duplicates: ${JSON.stringify(searchQuery)}`);
     }
     if (files && searchQuery?.results.length === 0) {
         console.log(`Searching folder for matching file: ${mentionName}`);

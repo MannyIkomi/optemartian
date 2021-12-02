@@ -27,7 +27,7 @@ export async function withUserMentions(notionBlocks, config) {
             return Object.assign(block, {
                 paragraph: {
                     ...paragraph,
-                    text: await swapUserMentions(richText, config),
+                    text: swapUserMentions(richText, config),
                 },
             });
         }
@@ -41,8 +41,7 @@ export async function swapPageMentions(richTextAst, config) {
         return Promise.all(resolvedRichText.map(async (ast) => {
             const hasLink = ast?.type === 'text' && ast?.text.link;
             if (hasLink &&
-                linkMatcher &&
-                //@ts-ignore
+                linkMatcher.post &&
                 hasLink.url.includes(linkMatcher.post)) {
                 const mention = ast.text;
                 // Query for first matching page
@@ -84,8 +83,9 @@ export async function swapUserMentions(richTextAst, config) {
         const resolvedRichText = await richTextAst;
         return Promise.all(resolvedRichText.map(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
-            //@ts-ignore
-            if (hasLink && hasLink.url.includes(linkMatcher.user)) {
+            if (hasLink &&
+                linkMatcher.user &&
+                hasLink.url.includes(linkMatcher.user)) {
                 const mention = ast.text;
                 const userDirectory = await readCsv(csvDirectory, config);
                 const matchedUser = await notion.findMatchingUser(mention, {
