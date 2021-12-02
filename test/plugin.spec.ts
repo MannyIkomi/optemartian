@@ -11,8 +11,11 @@ import {
 
 describe('with User Mentions Plugin', () => {
   const userMentionOptions: pluginConfig = {
-    linkSubstring: 'https://slab.discord.tools/users',
-    csvDirectory: './discordteam.csv',
+    linkMatcher: {
+      users: 'slab.discord.tools/users',
+    },
+
+    csvDirectory: 'discordteam.csv',
     csvOptions: {
       delimiter: ';',
       ignoreEmpty: true,
@@ -123,7 +126,21 @@ describe('with User Mentions Plugin', () => {
 describe('with Page Mentions Plugin', () => {
   // setup
   const pageMentionOptions: pluginConfig = {
-    linkSubstring: 'https://slab.discord.tools/posts',
+    linkMatcher: {
+      posts: 'slab.discord.tools/posts',
+    },
+    csvDirectory: 'discordteam.csv',
+    csvOptions: {
+      delimiter: ';',
+      ignoreEmpty: true,
+      headers: true,
+      objectMode: true,
+      rowTransformer: row => ({
+        email: row.email,
+        name: row.text,
+        profile: row.profile_url,
+      }),
+    },
     files: [
       {
         filepath:

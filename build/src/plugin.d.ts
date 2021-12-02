@@ -11,9 +11,9 @@ export interface LinkMatcher {
 export interface pluginConfig {
     csvDirectory?: string;
     files?: file[];
+    linkMatcher: LinkMatcher;
     userDirectory?: Directory[];
     csvOptions?: Object;
-    linkSubstring?: string;
     onMatchedPage?: (data: Object) => any | void;
 }
 export declare function withPageMentions(notionBlocks: Block[], config: pluginConfig): Promise<Promise<notion.Block>[]>;

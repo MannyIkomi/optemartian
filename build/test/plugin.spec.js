@@ -4,8 +4,10 @@ import { richTextMention } from '../src/notion';
 import { withUserMentions, swapUserMentions, withPageMentions, swapPageMentions, } from '../src/plugin';
 describe('with User Mentions Plugin', () => {
     const userMentionOptions = {
-        linkSubstring: 'https://slab.discord.tools/users',
-        csvDirectory: './discordteam.csv',
+        linkMatcher: {
+            users: 'slab.discord.tools/users',
+        },
+        csvDirectory: 'discordteam.csv',
         csvOptions: {
             delimiter: ';',
             ignoreEmpty: true,
@@ -104,7 +106,21 @@ describe('with User Mentions Plugin', () => {
 describe('with Page Mentions Plugin', () => {
     // setup
     const pageMentionOptions = {
-        linkSubstring: 'https://slab.discord.tools/posts',
+        linkMatcher: {
+            posts: 'slab.discord.tools/posts',
+        },
+        csvDirectory: 'discordteam.csv',
+        csvOptions: {
+            delimiter: ';',
+            ignoreEmpty: true,
+            headers: true,
+            objectMode: true,
+            rowTransformer: row => ({
+                email: row.email,
+                name: row.text,
+                profile: row.profile_url,
+            }),
+        },
         files: [
             {
                 filepath: '/Users/Manny/Documents/Freelance Client Files/Optemization/optemartian/src/mock-text.md',
@@ -146,24 +162,24 @@ describe('with Page Mentions Plugin', () => {
                             text: { content: 'Page mention ', link: undefined },
                             type: 'text',
                         },
-                        {
-                            annotations: {
-                                bold: false,
-                                code: false,
-                                color: 'default',
-                                italic: false,
-                                strikethrough: false,
-                                underline: false,
-                            },
-                            mention: {
-                                type: 'page',
-                                page: {
-                                    id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
-                                    object: 'page',
-                                },
-                            },
-                            type: 'mention',
-                        },
+                        // {
+                        //   annotations: {
+                        //     bold: false,
+                        //     code: false,
+                        //     color: 'default',
+                        //     italic: false,
+                        //     strikethrough: false,
+                        //     underline: false,
+                        //   },
+                        //   mention: {
+                        //     type: 'page',
+                        //     page: {
+                        //       id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
+                        //       object: 'page',
+                        //     },
+                        //   },
+                        //   type: 'mention',
+                        // },
                     ],
                 },
             },

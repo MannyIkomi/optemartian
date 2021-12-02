@@ -14,9 +14,9 @@ export interface LinkMatcher {
 export interface pluginConfig {
   csvDirectory?: string;
   files?: file[];
+  linkMatcher: LinkMatcher;
   userDirectory?: Directory[];
   csvOptions?: Object;
-  linkSubstring?: string;
   onMatchedPage?: (data: Object) => any | void;
 }
 
@@ -30,7 +30,7 @@ export async function withPageMentions(
       const richText = block.paragraph.text;
       // console.log(richText);
       return Object.assign(block, {
-        paragraph: {text: await swapPageMentions(richText, config)},
+        paragraph: {text: swapPageMentions(richText, config)},
       }) as Block;
     }
     return block;
@@ -44,11 +44,9 @@ export async function withUserMentions(
   return notionBlocks.map(async block => {
     if (block.type === 'paragraph' && block.paragraph) {
       const richText = block.paragraph.text;
-      const {paragraph} = block;
-      // console.log(richText);
       return Object.assign(block, {
         paragraph: {
-          text: await swapUserMentions(richText, config),
+          text: swapUserMentions(richText, config),
         },
       }) as Block;
     }
@@ -60,12 +58,16 @@ export async function swapPageMentions(
   richTextAst: RichText[] | Promise<RichText>[] | Promise<RichText[]>,
   config: pluginConfig
 ) {
-  const {linkSubstring, onMatchedPage} = config;
+  const {linkMatcher, onMatchedPage} = config;
   try {
     const resolved = await richTextAst;
     return resolved.map(async ast => {
       const hasLink = ast?.type === 'text' && ast?.text.link;
-      if (hasLink && linkSubstring && hasLink.url.includes(linkSubstring)) {
+      if (
+        hasLink &&
+        linkMatcher.post &&
+        hasLink.url.includes(linkMatcher.post)
+      ) {
         console.log(ast);
 
         const mention = ast.text;
@@ -126,6 +128,7 @@ export async function swapUserMentions(
         const userDirectory = await readCsv(csvDirectory, config);
 
         const matchedUser = await notion.findMatchingUser(mention, {
+          ...config,
           userDirectory,
         });
 
