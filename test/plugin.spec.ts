@@ -30,7 +30,7 @@ describe('with User Mentions Plugin', () => {
   it('Converts matching links inside Block[] to user mentions', async () => {
     const text =
       'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
-    const received = withUserMentions(
+    const received = await withUserMentions(
       markdownToBlocks(text),
       userMentionOptions
     );
@@ -75,14 +75,14 @@ describe('with User Mentions Plugin', () => {
         },
       },
     ];
-    return expect(received).resolves.toStrictEqual(expected);
+    return expect(received).toStrictEqual(expected);
   });
 
   it('Converts matching links inside RichText[] to user mentions', async () => {
     const text =
       'User mention [Val](https://slab.discord.tools/users/0groiz7t)';
 
-    const received = swapUserMentions(
+    const received = await swapUserMentions(
       markdownToRichText(text),
       userMentionOptions
     );
@@ -119,7 +119,7 @@ describe('with User Mentions Plugin', () => {
       },
     ];
 
-    return expect(received).resolves.toStrictEqual(expected);
+    return expect(received).toStrictEqual(expected);
   });
 });
 describe('with Page Mentions Plugin', () => {
@@ -154,10 +154,11 @@ describe('with Page Mentions Plugin', () => {
   it('Converts matching links inside Block[] to page mentions', async () => {
     const text =
       'Page mention [TEST MATCH Discord 2020 Year In Review](https://slab.discord.tools/posts/c8r8u5i4)';
-    const received = withPageMentions(
+    const received = await withPageMentions(
       markdownToBlocks(text),
       pageMentionOptions
     );
+    console.log(received);
 
     const expected = [
       {
@@ -199,14 +200,14 @@ describe('with Page Mentions Plugin', () => {
         },
       },
     ];
-    return expect(received).resolves.toStrictEqual(expected);
+    return expect(received).toStrictEqual(expected);
   });
 
   it('Converts matching links inside RichText[] to page mentions', async () => {
     const text =
       'Page mention [TEST MATCH Discord 2020 Year In Review](https://slab.discord.tools/posts/c8r8u5i4)';
 
-    const received = swapPageMentions(
+    const received = await swapPageMentions(
       markdownToRichText(text),
       pageMentionOptions
     );
@@ -243,16 +244,17 @@ describe('with Page Mentions Plugin', () => {
       },
     ];
 
-    return expect(received).resolves.toStrictEqual(expected);
+    return expect(received).toStrictEqual(expected);
   });
   it('Returns the original markdown if a matching page is not found', async () => {
     const text =
       'Page mention link [This page does not exist](https://slab.discord.tools/posts/c8r8u5i4)';
 
-    const received = swapPageMentions(
+    const received = await swapPageMentions(
       markdownToRichText(text),
       pageMentionOptions
     );
+
     const expected = [
       {
         annotations: {
@@ -286,6 +288,6 @@ describe('with Page Mentions Plugin', () => {
       },
     ];
 
-    return expect(received).resolves.toStrictEqual(expected);
+    return expect(received).toStrictEqual(expected);
   });
 });

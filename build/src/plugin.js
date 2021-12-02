@@ -1,25 +1,32 @@
 import * as notion from './notion';
 import { readCsv } from './readCsv';
 export async function withPageMentions(notionBlocks, config) {
-    // {linkSubstring, files, onMissingPage} = options
-    return Promise.all(notionBlocks.map(async (block) => {
+    const resolvedBlocks = await notionBlocks;
+    return resolvedBlocks.flatMap(async (block) => {
         if (block.type === 'paragraph' && block.paragraph) {
-            const richText = block.paragraph.text;
-            // console.log(richText);
-            return Object.assign(block, {
-                paragraph: { text: await swapPageMentions(richText, config) },
-            });
-        }
-        return block;
-    }));
-}
-export async function withUserMentions(notionBlocks, config) {
-    return notionBlocks.map(async (block) => {
-        if (block.type === 'paragraph' && block.paragraph) {
+            const { paragraph } = block;
             const richText = block.paragraph.text;
             // console.log(richText);
             return Object.assign(block, {
                 paragraph: {
+                    ...paragraph,
+                    text: await swapPageMentions(richText, config),
+                },
+            });
+        }
+        return block;
+    });
+}
+export async function withUserMentions(notionBlocks, config) {
+    const resolvedBlocks = await notionBlocks;
+    return resolvedBlocks.flatMap(async (block) => {
+        if (block.type === 'paragraph' && block.paragraph) {
+            const { paragraph } = block;
+            const richText = block.paragraph.text;
+            // console.log(richText);
+            return Object.assign(block, {
+                paragraph: {
+                    ...paragraph,
                     text: await swapUserMentions(richText, config),
                 },
             });
@@ -30,13 +37,13 @@ export async function withUserMentions(notionBlocks, config) {
 export async function swapPageMentions(richTextAst, config) {
     const { linkMatcher, onMatchedPage } = config;
     try {
-        return Promise.all(richTextAst.map(async (ast) => {
+        const resolvedRichText = await richTextAst;
+        return resolvedRichText.map(async (ast) => {
             const hasLink = ast?.type === 'text' && ast?.text.link;
             if (hasLink &&
                 linkMatcher &&
                 //@ts-ignore
                 hasLink.url.includes(linkMatcher.post)) {
-                console.log(ast);
                 const mention = ast.text;
                 // Query for first matching page
                 // if query is empty, check the {folderpath} for a matching title
@@ -64,21 +71,21 @@ export async function swapPageMentions(richTextAst, config) {
                 }
             }
             return ast;
-        }));
+        });
     }
     catch (err) {
-        console.error(err);
-        return;
+        console.error(err, richTextAst);
+        return richTextAst;
     }
 }
 export async function swapUserMentions(richTextAst, config) {
     const { csvDirectory, linkMatcher } = config;
     try {
-        return richTextAst.map(async (ast) => {
+        const resolvedRichText = await richTextAst;
+        return resolvedRichText.map(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
             //@ts-ignore
             if (hasLink && hasLink.url.includes(linkMatcher.user)) {
-                console.log(ast);
                 const mention = ast.text;
                 const userDirectory = await readCsv(csvDirectory, config);
                 const matchedUser = await notion.findMatchingUser(mention, {
@@ -103,8 +110,8 @@ export async function swapUserMentions(richTextAst, config) {
         });
     }
     catch (err) {
-        console.error(err);
-        return;
+        console.error(err, richTextAst);
+        return richTextAst;
     }
 }
 //# sourceMappingURL=plugin.js.map
