@@ -1,16 +1,22 @@
 import * as notion from './notion';
 import {Block, RichText, RichTextMention, RichTextText} from './notion';
-import {directory, readCsv} from './readCsv';
+import {Directory, readCsv} from './readCsv';
 import type ParserOptionArgs from 'fast-csv';
 
-export interface file {
+export interface File {
   filepath: string;
 }
 
-export interface pluginConfig {
+export interface LinkMatcher {
+  user?: string;
+  post?: string;
+}
+
+export interface PluginConfig {
+  linkMatcher: LinkMatcher;
+  files?: File[];
   csvDirectory?: string;
-  files?: file[];
-  userDirectory?: directory[];
+  userDirectory?: Directory[];
   csvOptions?: Object;
   linkSubstring?: string;
   onMatchedPage?: (data: Object) => any | void;
@@ -18,7 +24,7 @@ export interface pluginConfig {
 
 export async function withPageMentions(
   notionBlocks: Block[],
-  config: pluginConfig
+  config: PluginConfig
 ) {
   // {linkSubstring, files, onMissingPage} = options
   return Promise.all(
@@ -37,12 +43,11 @@ export async function withPageMentions(
 
 export async function withUserMentions(
   notionBlocks: Block[],
-  config: pluginConfig
+  config: PluginConfig
 ) {
   return notionBlocks.map(async block => {
     if (block.type === 'paragraph' && block.paragraph) {
       const richText = block.paragraph.text;
-      const {paragraph} = block;
       // console.log(richText);
       return Object.assign(block, {
         paragraph: {
@@ -56,14 +61,19 @@ export async function withUserMentions(
 
 export async function swapPageMentions(
   richTextAst: RichText[],
-  config: pluginConfig
+  config: PluginConfig
 ) {
-  const {linkSubstring, onMatchedPage} = config;
+  const {linkMatcher, onMatchedPage} = config;
   try {
     return Promise.all(
       richTextAst.map(async ast => {
         const hasLink = ast?.type === 'text' && ast?.text.link;
-        if (hasLink && linkSubstring && hasLink.url.includes(linkSubstring)) {
+        if (
+          hasLink &&
+          linkMatcher &&
+          //@ts-ignore
+          hasLink.url.includes(linkMatcher.post)
+        ) {
           console.log(ast);
 
           const mention = ast.text;
@@ -111,19 +121,21 @@ export async function swapPageMentions(
 
 export async function swapUserMentions(
   richTextAst: RichText[],
-  config: pluginConfig
+  config: PluginConfig
 ) {
-  const {csvDirectory} = config;
+  const {csvDirectory, linkMatcher} = config;
   try {
     return richTextAst.map(async ast => {
       const hasLink = ast.type === 'text' && ast.text.link;
-      if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
+      //@ts-ignore
+      if (hasLink && hasLink.url.includes(linkMatcher.user)) {
         console.log(ast);
 
         const mention = ast.text;
         const userDirectory = await readCsv(csvDirectory, config);
 
         const matchedUser = await notion.findMatchingUser(mention, {
+          ...config,
           userDirectory,
         });
 

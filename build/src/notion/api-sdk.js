@@ -44,8 +44,7 @@ export async function findMatchingUser(richTextLink, options) {
         if (!fromUserDirectory) {
             return false;
         }
-        console.log('PROFILE ID:', profileId);
-        console.log('DIRECTORY MATCH:', fromUserDirectory);
+        console.log('DIRECTORY MATCH:', profileId, fromUserDirectory);
         const foundUser = notionUsers?.find(({ name }) => {
             if (!name) {
                 console.warn('Notion Users.name was undefined');

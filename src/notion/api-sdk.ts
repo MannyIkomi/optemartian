@@ -2,7 +2,7 @@ import {Client} from '@notionhq/client';
 import path from 'path';
 import dotenv from 'dotenv';
 import {PageMention, PersonUser, RichTextText, RichText} from '.';
-import {pluginConfig} from '../plugin';
+import {PluginConfig} from '../plugin';
 dotenv.config();
 
 const VAL_NOTION_API_KEY = process.env.VAL_NOTION_API_KEY;
@@ -30,7 +30,7 @@ export async function queryWorkspace(text: string) {
   }
 }
 
-export async function findMatchingUser(richTextLink, options: pluginConfig) {
+export async function findMatchingUser(richTextLink, options: PluginConfig) {
   const {userDirectory} = options;
   if (!richTextLink) {
     throw new Error('🚨 Please pass a mention object');
@@ -51,8 +51,7 @@ export async function findMatchingUser(richTextLink, options: pluginConfig) {
       return false;
     }
 
-    console.log('PROFILE ID:', profileId);
-    console.log('DIRECTORY MATCH:', fromUserDirectory);
+    console.log('DIRECTORY MATCH:', profileId, fromUserDirectory);
 
     const foundUser = notionUsers?.find(({name}) => {
       if (!name) {
@@ -70,7 +69,7 @@ export async function findMatchingUser(richTextLink, options: pluginConfig) {
   return foundUser as PersonUser;
 }
 
-export async function findMatchingPage(link, options: pluginConfig) {
+export async function findMatchingPage(link, options: PluginConfig) {
   const {files} = options;
 
   if (!link) {

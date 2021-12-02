@@ -61,7 +61,7 @@ describe('find matching user', () => {
         content: 'Val',
         link: {url: 'https://slab.discord.tools/users/0groiz7t'},
       },
-      {linkSubstring: 'slab.discord.tools/users'}
+      {linkMatcher: {user: 'slab.discord.tools/users'}}
     );
 
     const expected = {

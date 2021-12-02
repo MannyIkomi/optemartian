@@ -4,7 +4,9 @@ import { richTextMention } from '../src/notion';
 import { withUserMentions, swapUserMentions, withPageMentions, swapPageMentions, } from '../src/plugin';
 describe('with User Mentions Plugin', () => {
     const userMentionOptions = {
-        linkSubstring: 'https://slab.discord.tools/users',
+        linkMatcher: {
+            user: 'slab.discord.tools/users',
+        },
         csvDirectory: './discordteam.csv',
         csvOptions: {
             delimiter: ';',
@@ -104,7 +106,9 @@ describe('with User Mentions Plugin', () => {
 describe('with Page Mentions Plugin', () => {
     // setup
     const pageMentionOptions = {
-        linkSubstring: 'https://slab.discord.tools/posts',
+        linkMatcher: {
+            post: 'slab.discord.tools/posts',
+        },
         files: [
             {
                 filepath: '/Users/Manny/Documents/Freelance Client Files/Optemization/optemartian/src/mock-text.md',

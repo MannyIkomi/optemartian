@@ -3,7 +3,7 @@ import type ParserOptionsArgs from 'fast-csv';
 // import {dirname} from 'path';
 // import {fileURLToPath} from 'url';
 // const __dirname = dirname(fileURLToPath(import.meta.url));
-export interface directory {
+export interface Directory {
   profile: string;
   name: string;
 }
@@ -15,7 +15,7 @@ export function readCsv(filepath = '', config: any) {
   }
 
   return new Promise((resolve, reject) => {
-    const collectedRows: Array<directory> = [];
+    const collectedRows: Array<Directory> = [];
     csv
       .parseFile(filepath, csvOptions)
       .on('error', reject)
@@ -27,5 +27,5 @@ export function readCsv(filepath = '', config: any) {
         resolve(collectedRows);
         console.log(`Parsed ${rowCount} rows`);
       });
-  }) as Promise<directory[]>;
+  }) as Promise<Directory[]>;
 }

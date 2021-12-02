@@ -17,7 +17,6 @@ export async function withUserMentions(notionBlocks, config) {
     return notionBlocks.map(async (block) => {
         if (block.type === 'paragraph' && block.paragraph) {
             const richText = block.paragraph.text;
-            const { paragraph } = block;
             // console.log(richText);
             return Object.assign(block, {
                 paragraph: {
@@ -29,11 +28,14 @@ export async function withUserMentions(notionBlocks, config) {
     });
 }
 export async function swapPageMentions(richTextAst, config) {
-    const { linkSubstring, onMatchedPage } = config;
+    const { linkMatcher, onMatchedPage } = config;
     try {
         return Promise.all(richTextAst.map(async (ast) => {
             const hasLink = ast?.type === 'text' && ast?.text.link;
-            if (hasLink && linkSubstring && hasLink.url.includes(linkSubstring)) {
+            if (hasLink &&
+                linkMatcher &&
+                //@ts-ignore
+                hasLink.url.includes(linkMatcher.post)) {
                 console.log(ast);
                 const mention = ast.text;
                 // Query for first matching page
@@ -70,15 +72,17 @@ export async function swapPageMentions(richTextAst, config) {
     }
 }
 export async function swapUserMentions(richTextAst, config) {
-    const { csvDirectory } = config;
+    const { csvDirectory, linkMatcher } = config;
     try {
         return richTextAst.map(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
-            if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
+            //@ts-ignore
+            if (hasLink && hasLink.url.includes(linkMatcher.user)) {
                 console.log(ast);
                 const mention = ast.text;
                 const userDirectory = await readCsv(csvDirectory, config);
                 const matchedUser = await notion.findMatchingUser(mention, {
+                    ...config,
                     userDirectory,
                 });
                 if (!matchedUser) {

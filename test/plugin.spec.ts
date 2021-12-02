@@ -6,12 +6,14 @@ import {
   swapUserMentions,
   withPageMentions,
   swapPageMentions,
-  pluginConfig,
+  PluginConfig,
 } from '../src/plugin';
 
 describe('with User Mentions Plugin', () => {
-  const userMentionOptions: pluginConfig = {
-    linkSubstring: 'https://slab.discord.tools/users',
+  const userMentionOptions: PluginConfig = {
+    linkMatcher: {
+      user: 'slab.discord.tools/users',
+    },
     csvDirectory: './discordteam.csv',
     csvOptions: {
       delimiter: ';',
@@ -122,8 +124,10 @@ describe('with User Mentions Plugin', () => {
 });
 describe('with Page Mentions Plugin', () => {
   // setup
-  const pageMentionOptions: pluginConfig = {
-    linkSubstring: 'https://slab.discord.tools/posts',
+  const pageMentionOptions: PluginConfig = {
+    linkMatcher: {
+      post: 'slab.discord.tools/posts',
+    },
     files: [
       {
         filepath:
