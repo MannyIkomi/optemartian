@@ -21,7 +21,7 @@ export interface pluginConfig {
 }
 
 export async function withPageMentions(
-  notionBlocks: Block[],
+  notionBlocks: Block[] | Promise<Block>[],
   config: pluginConfig
 ) {
   // {linkSubstring, files, onMissingPage} = options
@@ -38,7 +38,7 @@ export async function withPageMentions(
 }
 
 export async function withUserMentions(
-  notionBlocks: Block[],
+  notionBlocks: Block[] | Promise<Block>[],
   config: pluginConfig
 ) {
   return notionBlocks.map(async block => {

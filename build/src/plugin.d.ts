@@ -16,7 +16,7 @@ export interface pluginConfig {
     csvOptions?: Object;
     onMatchedPage?: (data: Object) => any | void;
 }
-export declare function withPageMentions(notionBlocks: Block[], config: pluginConfig): Promise<Promise<notion.Block>[]>;
-export declare function withUserMentions(notionBlocks: Block[], config: pluginConfig): Promise<Promise<notion.Block>[]>;
+export declare function withPageMentions(notionBlocks: Block[] | Promise<Block>[], config: pluginConfig): Promise<Promise<notion.Block>[]>;
+export declare function withUserMentions(notionBlocks: Block[] | Promise<Block>[], config: pluginConfig): Promise<Promise<notion.Block>[]>;
 export declare function swapPageMentions(richTextAst: RichText[] | Promise<RichText>[] | Promise<RichText[]>, config: pluginConfig): Promise<Promise<notion.Block>[] | undefined>;
 export declare function swapUserMentions(richTextAst: RichText[] | Promise<RichText>[] | Promise<RichText[]>, config: pluginConfig): Promise<Promise<notion.RichText>[] | undefined>;

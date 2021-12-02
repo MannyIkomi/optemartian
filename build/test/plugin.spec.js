@@ -162,24 +162,24 @@ describe('with Page Mentions Plugin', () => {
                             text: { content: 'Page mention ', link: undefined },
                             type: 'text',
                         },
-                        // {
-                        //   annotations: {
-                        //     bold: false,
-                        //     code: false,
-                        //     color: 'default',
-                        //     italic: false,
-                        //     strikethrough: false,
-                        //     underline: false,
-                        //   },
-                        //   mention: {
-                        //     type: 'page',
-                        //     page: {
-                        //       id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
-                        //       object: 'page',
-                        //     },
-                        //   },
-                        //   type: 'mention',
-                        // },
+                        {
+                            annotations: {
+                                bold: false,
+                                code: false,
+                                color: 'default',
+                                italic: false,
+                                strikethrough: false,
+                                underline: false,
+                            },
+                            mention: {
+                                type: 'page',
+                                page: {
+                                    id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
+                                    object: 'page',
+                                },
+                            },
+                            type: 'mention',
+                        },
                     ],
                 },
             },
