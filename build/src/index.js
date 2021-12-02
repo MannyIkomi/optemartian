@@ -64,4 +64,5 @@ export function markdownToRichText(text) {
     return richText;
 }
 export * as plugin from './plugin';
+export * as notion from './notion/index';
 //# sourceMappingURL=index.js.map

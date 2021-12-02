@@ -25,3 +25,4 @@ export declare function markdownToBlocks(body: string): notion.Block[];
  */
 export declare function markdownToRichText(text: string): notion.RichText[];
 export * as plugin from './plugin';
+export * as notion from './notion/index';
