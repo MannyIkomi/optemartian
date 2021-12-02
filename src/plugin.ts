@@ -69,50 +69,52 @@ export async function swapPageMentions(
   const {linkMatcher, onMatchedPage} = config;
   try {
     const resolvedRichText = await richTextAst;
-    return resolvedRichText.map(async ast => {
-      const hasLink = ast?.type === 'text' && ast?.text.link;
-      if (
-        hasLink &&
-        linkMatcher &&
-        //@ts-ignore
-        hasLink.url.includes(linkMatcher.post)
-      ) {
-        const mention = ast.text;
+    return resolvedRichText
+      .map(async ast => {
+        const hasLink = ast?.type === 'text' && ast?.text.link;
+        if (
+          hasLink &&
+          linkMatcher &&
+          //@ts-ignore
+          hasLink.url.includes(linkMatcher.post)
+        ) {
+          const mention = ast.text;
 
-        // Query for first matching page
-        // if query is empty, check the {folderpath} for a matching title
-        const matchedPage = await notion.findMatchingPage(mention, config);
+          // Query for first matching page
+          // if query is empty, check the {folderpath} for a matching title
+          const matchedPage = await notion.findMatchingPage(mention, config);
 
-        if (!matchedPage) {
-          // if no page found, return original ast early, with console warning
-          console.warn(
-            `Could not find matching page for: ${JSON.stringify(mention)}}`
-          );
-          return ast as RichText;
+          if (!matchedPage) {
+            // if no page found, return original ast early, with console warning
+            console.warn(
+              `Could not find matching page for: ${JSON.stringify(mention)}}`
+            );
+            return ast as RichText;
+          }
+
+          if (matchedPage.page) {
+            console.log('PAGE EXISTED IN NOTION:', matchedPage.page);
+            return notion.richTextMention({
+              type: 'page',
+              page: {
+                id: matchedPage.page.id,
+              },
+            }) as RichText;
+          }
+
+          if (matchedPage.filepath) {
+            // create the page using the markdownfile found
+            return onMatchedPage && onMatchedPage({matchedPage, ast, config});
+
+            //notion.richTextMention({})
+            // use returned created page to create the richTextMention inline
+            // if so create the page before the mention using {onMissingPage}
+          }
         }
 
-        if (matchedPage.page) {
-          console.log('PAGE EXISTED IN NOTION:', matchedPage.page);
-          return notion.richTextMention({
-            type: 'page',
-            page: {
-              id: matchedPage.page.id,
-            },
-          }) as RichText;
-        }
-
-        if (matchedPage.filepath) {
-          // create the page using the markdownfile found
-          return onMatchedPage && onMatchedPage({matchedPage, ast, config});
-
-          //notion.richTextMention({})
-          // use returned created page to create the richTextMention inline
-          // if so create the page before the mention using {onMissingPage}
-        }
-      }
-
-      return ast as RichText;
-    }) as Promise<RichText>[];
+        return ast as RichText;
+      })
+      .filter(async ast => ast) as Promise<RichText>[];
   } catch (err) {
     console.error(err, richTextAst);
     return richTextAst as RichText[];
@@ -127,39 +129,41 @@ export async function swapUserMentions(
 
   try {
     const resolvedRichText = await richTextAst;
-    return resolvedRichText.map(async ast => {
-      const hasLink = ast.type === 'text' && ast.text.link;
-      //@ts-ignore
-      if (hasLink && hasLink.url.includes(linkMatcher.user)) {
-        const mention = ast.text;
-        const userDirectory = await readCsv(csvDirectory, config);
+    return resolvedRichText
+      .map(async ast => {
+        const hasLink = ast.type === 'text' && ast.text.link;
+        //@ts-ignore
+        if (hasLink && hasLink.url.includes(linkMatcher.user)) {
+          const mention = ast.text;
+          const userDirectory = await readCsv(csvDirectory, config);
 
-        const matchedUser = await notion.findMatchingUser(mention, {
-          ...config,
-          userDirectory,
-        });
+          const matchedUser = await notion.findMatchingUser(mention, {
+            ...config,
+            userDirectory,
+          });
 
-        if (!matchedUser) {
-          console.warn(
-            `Could not find matching user for ${JSON.stringify(mention)}`
-          );
-          return ast as RichText;
+          if (!matchedUser) {
+            console.warn(
+              `Could not find matching user for ${JSON.stringify(mention)}`
+            );
+            return ast as RichText;
+          }
+
+          console.log('MATCHED NOTION USER:', matchedUser);
+
+          return notion.richTextMention({
+            type: 'user',
+            user: {
+              object: 'user',
+              // name: matchedUser.name,
+              id: matchedUser.id,
+            },
+          }) as RichText;
         }
 
-        console.log('MATCHED NOTION USER:', matchedUser);
-
-        return notion.richTextMention({
-          type: 'user',
-          user: {
-            object: 'user',
-            // name: matchedUser.name,
-            id: matchedUser.id,
-          },
-        }) as RichText;
-      }
-
-      return ast as RichText;
-    }) as Promise<RichText>[];
+        return ast as RichText;
+      })
+      .filter(async ast => ast) as Promise<RichText>[];
   } catch (err) {
     console.error(err, richTextAst);
     return richTextAst as RichText[];
