@@ -69,8 +69,8 @@ export async function swapPageMentions(
   const {linkMatcher, onMatchedPage} = config;
   try {
     const resolvedRichText = await richTextAst;
-    return resolvedRichText
-      .map(async ast => {
+    return Promise.all(
+      resolvedRichText.map(async ast => {
         const hasLink = ast?.type === 'text' && ast?.text.link;
         if (
           hasLink &&
@@ -114,7 +114,7 @@ export async function swapPageMentions(
 
         return ast as RichText;
       })
-      .filter(async ast => ast) as Promise<RichText>[];
+    ) as Promise<RichText[]>;
   } catch (err) {
     console.error(err, richTextAst);
     return richTextAst as RichText[];
@@ -129,8 +129,8 @@ export async function swapUserMentions(
 
   try {
     const resolvedRichText = await richTextAst;
-    return resolvedRichText
-      .map(async ast => {
+    return Promise.all(
+      resolvedRichText.map(async ast => {
         const hasLink = ast.type === 'text' && ast.text.link;
         //@ts-ignore
         if (hasLink && hasLink.url.includes(linkMatcher.user)) {
@@ -163,7 +163,7 @@ export async function swapUserMentions(
 
         return ast as RichText;
       })
-      .filter(async ast => ast) as Promise<RichText>[];
+    ) as Promise<RichText[]>;
   } catch (err) {
     console.error(err, richTextAst);
     return richTextAst as RichText[];

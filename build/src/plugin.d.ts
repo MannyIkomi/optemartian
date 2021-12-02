@@ -18,5 +18,5 @@ export interface PluginConfig {
 }
 export declare function withPageMentions(notionBlocks: Block[] | Promise<Block[]>, config: PluginConfig): Promise<Promise<notion.Block>[]>;
 export declare function withUserMentions(notionBlocks: Block[] | Promise<Block[]>, config: PluginConfig): Promise<Promise<notion.Block>[]>;
-export declare function swapPageMentions(richTextAst: RichText[] | Promise<RichText[]>, config: PluginConfig): Promise<notion.RichText[] | Promise<notion.RichText>[]>;
-export declare function swapUserMentions(richTextAst: RichText[] | Promise<RichText[]>, config: PluginConfig): Promise<notion.RichText[] | Promise<notion.RichText>[]>;
+export declare function swapPageMentions(richTextAst: RichText[] | Promise<RichText[]>, config: PluginConfig): Promise<notion.RichText[]>;
+export declare function swapUserMentions(richTextAst: RichText[] | Promise<RichText[]>, config: PluginConfig): Promise<notion.RichText[]>;

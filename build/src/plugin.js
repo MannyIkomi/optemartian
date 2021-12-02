@@ -38,8 +38,7 @@ export async function swapPageMentions(richTextAst, config) {
     const { linkMatcher, onMatchedPage } = config;
     try {
         const resolvedRichText = await richTextAst;
-        return resolvedRichText
-            .map(async (ast) => {
+        return Promise.all(resolvedRichText.map(async (ast) => {
             const hasLink = ast?.type === 'text' && ast?.text.link;
             if (hasLink &&
                 linkMatcher &&
@@ -72,8 +71,7 @@ export async function swapPageMentions(richTextAst, config) {
                 }
             }
             return ast;
-        })
-            .filter(async (ast) => ast);
+        }));
     }
     catch (err) {
         console.error(err, richTextAst);
@@ -84,8 +82,7 @@ export async function swapUserMentions(richTextAst, config) {
     const { csvDirectory, linkMatcher } = config;
     try {
         const resolvedRichText = await richTextAst;
-        return resolvedRichText
-            .map(async (ast) => {
+        return Promise.all(resolvedRichText.map(async (ast) => {
             const hasLink = ast.type === 'text' && ast.text.link;
             //@ts-ignore
             if (hasLink && hasLink.url.includes(linkMatcher.user)) {
@@ -110,8 +107,7 @@ export async function swapUserMentions(richTextAst, config) {
                 });
             }
             return ast;
-        })
-            .filter(async (ast) => ast);
+        }));
     }
     catch (err) {
         console.error(err, richTextAst);
