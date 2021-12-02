@@ -61,7 +61,7 @@ export async function swapPageMentions(
   const {linkSubstring, onMatchedPage} = config;
   try {
     return Promise.all(
-      richTextAst.flatMap(async ast => {
+      richTextAst.map(async ast => {
         const hasLink = ast?.type === 'text' && ast?.text.link;
         if (hasLink && linkSubstring && hasLink.url.includes(linkSubstring)) {
           console.log(ast);
@@ -115,7 +115,7 @@ export async function swapUserMentions(
 ) {
   const {csvDirectory} = config;
   try {
-    return richTextAst.flatMap(async ast => {
+    return richTextAst.map(async ast => {
       const hasLink = ast.type === 'text' && ast.text.link;
       if (hasLink && hasLink.url.includes('slab.discord.tools/users')) {
         console.log(ast);

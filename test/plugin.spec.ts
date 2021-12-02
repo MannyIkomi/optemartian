@@ -135,6 +135,8 @@ describe('with Page Mentions Plugin', () => {
       },
     ],
     onMatchedPage: () => {
+      // generate page from markdown file
+      // use response to dynamically generate page mention
       return richTextMention({
         type: 'page',
         page: {

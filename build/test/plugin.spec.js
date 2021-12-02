@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { markdownToRichText, markdownToBlocks } from '../src/index';
+import { richTextMention } from '../src/notion';
 import { withUserMentions, swapUserMentions, withPageMentions, swapPageMentions, } from '../src/plugin';
 describe('with User Mentions Plugin', () => {
     const userMentionOptions = {
@@ -112,8 +113,16 @@ describe('with Page Mentions Plugin', () => {
                 filepath: '/Users/Manny/Documents/Freelance Client Files/Optemization/optemartian/src/TEST MATCH Discord 2020 Year In Review.md',
             },
         ],
-        onMatchedPage: data => {
-            console.log('MISSING PAGE DATA:', data);
+        onMatchedPage: () => {
+            // generate page from markdown file
+            // use response to dynamically generate page mention
+            return richTextMention({
+                type: 'page',
+                page: {
+                    id: 'db3f4823-4fca-457d-bc2e-8aec396c28fa',
+                    object: 'page',
+                },
+            });
         },
     };
     it('Converts matching links inside Block[] to page mentions', async () => {
