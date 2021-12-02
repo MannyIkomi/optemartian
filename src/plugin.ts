@@ -57,7 +57,7 @@ export async function withUserMentions(
         return Object.assign(block, {
           paragraph: {
             ...paragraph,
-            text: await swapUserMentions(richText, config),
+            text: swapUserMentions(richText, config),
           },
         }) as Block;
       }
@@ -78,8 +78,7 @@ export async function swapPageMentions(
         const hasLink = ast?.type === 'text' && ast?.text.link;
         if (
           hasLink &&
-          linkMatcher &&
-          //@ts-ignore
+          linkMatcher.post &&
           hasLink.url.includes(linkMatcher.post)
         ) {
           const mention = ast.text;
@@ -136,8 +135,12 @@ export async function swapUserMentions(
     return Promise.all(
       resolvedRichText.map(async ast => {
         const hasLink = ast.type === 'text' && ast.text.link;
-        //@ts-ignore
-        if (hasLink && hasLink.url.includes(linkMatcher.user)) {
+
+        if (
+          hasLink &&
+          linkMatcher.user &&
+          hasLink.url.includes(linkMatcher.user)
+        ) {
           const mention = ast.text;
           const userDirectory = await readCsv(csvDirectory, config);
 
