@@ -91,7 +91,7 @@ function parseList(
 
     // listItem.type === "listitem"
     const contents = listItem.children;
-    const parentItem = listItem.children[0].type;
+    const parentItem = listItem.children[0];
 
     if (contents) {
       return contents.flatMap((content, index) => {
