@@ -102,7 +102,7 @@ export interface TableCell extends Parent {
     children: PhrasingContent[];
 }
 export declare type MdastContent = FlowContent | ListContent | PhrasingContent | TableContent | RowContent;
-export declare type FlowContent = Blockquote | Code | Heading | HTML | List | ThematicBreak | Content | Table;
+export declare type FlowContent = Blockquote | Code | Heading | List | ThematicBreak | Content | Table;
 export declare type Content = Definition | Paragraph;
 export declare type ListContent = ListItem;
 export declare type PhrasingContent = Link | LinkReference | StaticPhrasingContent;

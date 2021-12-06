@@ -45,31 +45,34 @@ export function headingThree(text) {
         },
     };
 }
-export function bulletedListItem(text) {
+export function bulletedListItem(text, children) {
     return {
         object: 'block',
         type: 'bulleted_list_item',
         bulleted_list_item: {
             text,
+            children,
         },
     };
 }
-export function numberedListItem(text) {
+export function numberedListItem(text, children) {
     return {
         object: 'block',
         type: 'numbered_list_item',
         numbered_list_item: {
             text,
+            children,
         },
     };
 }
-export function toDo(checked, text) {
+export function toDo(checked, text, children) {
     return {
         object: 'block',
         type: 'to_do',
         to_do: {
             text,
             checked: checked,
+            children,
         },
     };
 }

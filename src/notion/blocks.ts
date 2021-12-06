@@ -7,6 +7,7 @@ import type {
   ParagraphBlock,
   RichText,
   CodeBlock,
+  Block,
   ToDoBlock,
 } from '@notionhq/client/build/src/api-types';
 
@@ -62,33 +63,46 @@ export function headingThree(text: RichText[]): HeadingThreeBlock {
   } as HeadingThreeBlock;
 }
 
-export function bulletedListItem(text: RichText[]): BulletedListItemBlock {
+export function bulletedListItem(
+  text: RichText[],
+  children?: Block[]
+): BulletedListItemBlock {
   return {
     object: 'block',
     type: 'bulleted_list_item',
     bulleted_list_item: {
       text,
+      children,
     },
   } as BulletedListItemBlock;
 }
 
-export function numberedListItem(text: RichText[]): NumberedListItemBlock {
+export function numberedListItem(
+  text: RichText[],
+  children?: Block[] | undefined
+): NumberedListItemBlock {
   return {
     object: 'block',
     type: 'numbered_list_item',
     numbered_list_item: {
       text,
+      children,
     },
   } as NumberedListItemBlock;
 }
 
-export function toDo(checked: boolean, text: RichText[]): ToDoBlock {
+export function toDo(
+  checked: boolean,
+  text: RichText[],
+  children?: Block[] | undefined
+): ToDoBlock {
   return {
     object: 'block',
     type: 'to_do',
     to_do: {
       text,
       checked: checked,
+      children,
     },
   } as ToDoBlock;
 }

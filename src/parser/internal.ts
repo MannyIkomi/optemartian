@@ -1,5 +1,6 @@
 import * as md from '../markdown';
 import * as notion from '../notion';
+import {richTextMention} from '../notion';
 
 function parseInline(
   element: md.PhrasingContent,
@@ -75,31 +76,49 @@ function parseCode(element: md.Code): notion.CodeBlock {
 }
 
 function parseList(
-  element: md.List
+  listBlock: md.List
 ): (
   | notion.BulletedListItemBlock
   | notion.NumberedListItemBlock
   | notion.ToDoBlock
 )[] {
-  return element.children.flatMap(item => {
-    const paragraph = item.children[0];
-    if (paragraph) {
-      if (paragraph.type !== 'paragraph') {
-        return [] as (
-          | notion.BulletedListItemBlock
-          | notion.NumberedListItemBlock
-          | notion.ToDoBlock
-        )[];
-      }
+  const isNumbered: boolean =
+    listBlock.start !== null && listBlock.start !== undefined;
 
-      const text = paragraph.children.flatMap(child => parseInline(child));
-      if (element.start !== null && element.start !== undefined) {
-        return [notion.numberedListItem(text)];
-      } else if (item.checked !== null && item.checked !== undefined) {
-        return [notion.toDo(item.checked, text)];
-      } else {
-        return [notion.bulletedListItem(text)];
-      }
+  return listBlock.children.flatMap(listItem => {
+    const hasCheckbox: boolean =
+      listItem.checked !== null && listItem.checked !== undefined;
+
+    // listItem.type === "listitem"
+    const contents = listItem.children;
+    const parentItem = listItem.children[0].type;
+
+    if (contents) {
+      return contents.flatMap((content, index) => {
+        if (content.type === 'list') {
+          return parseList(content);
+        }
+
+        if (content.type !== 'paragraph') {
+          return [{has_children: true}] as (
+            | notion.BulletedListItemBlock
+            | notion.NumberedListItemBlock
+            | notion.ToDoBlock
+          )[];
+        }
+
+        const text = content.children.flatMap(child => parseInline(child));
+        if (listBlock.start !== null && listBlock.start !== undefined) {
+          return [notion.numberedListItem(text)];
+        } else if (
+          listItem.checked !== null &&
+          listItem.checked !== undefined
+        ) {
+          return [notion.toDo(listItem.checked, text)];
+        } else {
+          return [notion.bulletedListItem(text)];
+        }
+      });
     } else {
       return [];
     }

@@ -1,6 +1,7 @@
 // From https://github.com/syntax-tree/mdast
 
 import type {Node} from 'unist';
+import {RichText, RichTextText} from '../notion';
 
 export interface Parent {
   children: MdastContent[];
@@ -141,7 +142,7 @@ export type FlowContent =
   | Blockquote
   | Code
   | Heading
-  | HTML
+  // | HTML
   | List
   | ThematicBreak
   | Content

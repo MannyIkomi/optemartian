@@ -189,6 +189,47 @@ describe('gfm parser', () => {
     expect(actual).toStrictEqual(expected);
   });
 
+  it('should parse nested bulleted list', () => {
+    const ast = md.root(
+      md.paragraph(md.text('hello')),
+      md.unorderedList(
+        md.listItem(md.paragraph(md.text('a'))),
+        md.listItem(md.paragraph(md.emphasis(md.text('b')))),
+        md.listItem(
+          md.paragraph(md.emphasis(md.text('nested list'))),
+          md.unorderedList(
+            md.listItem(md.paragraph(md.text('a1'))),
+            md.listItem(md.paragraph(md.emphasis(md.text('b2'))))
+          )
+        )
+      ),
+      md.orderedList(md.listItem(md.paragraph(md.text('d'))))
+    );
+
+    console.log('AST', JSON.stringify(ast, null, 2));
+
+    const actual = parseBlocks(ast);
+
+    const expected = [
+      notion.paragraph([notion.richText('hello')]),
+      notion.bulletedListItem([notion.richText('a')]),
+      notion.bulletedListItem([
+        notion.richText('b', {annotations: {italic: true}}),
+      ]),
+
+      notion.bulletedListItem([
+        notion.richText('nested list', {annotations: {italic: true}}),
+      ]),
+      notion.bulletedListItem([notion.richText('a1')]),
+      notion.bulletedListItem([
+        notion.richText('b2', {annotations: {italic: true}}),
+      ]),
+      notion.numberedListItem([notion.richText('d')]),
+    ];
+
+    expect(actual).toStrictEqual(expected);
+  });
+
   it('should parse github extensions', () => {
     const ast = md.root(
       md.paragraph(
