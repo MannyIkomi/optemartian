@@ -6,6 +6,7 @@ import type ParserOptionsArgs from 'fast-csv';
 export interface Directory {
   profile: string;
   name: string;
+  email: string;
 }
 
 export function readCsv(filepath = '', config: any) {

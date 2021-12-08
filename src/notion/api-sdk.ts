@@ -6,8 +6,11 @@ import {PluginConfig} from '../plugin';
 dotenv.config();
 
 const VAL_NOTION_API_KEY = process.env.VAL_NOTION_API_KEY;
+const DISCORD_API_KEY = process.env.DISCORD_API_KEY;
 
-export const notionClient = new Client({auth: VAL_NOTION_API_KEY});
+export const notionClient = new Client({
+  auth: DISCORD_API_KEY || VAL_NOTION_API_KEY,
+});
 
 export async function getWorkspaceUsers() {
   // https://developers.notion.com/reference/get-users
@@ -41,25 +44,35 @@ export async function findMatchingUser(richTextLink, options: PluginConfig) {
 
   if (userDirectory && userDirectory.length > 0) {
     const userIdRegex = /\w+$/gm;
-    let profileId;
-    const fromUserDirectory = userDirectory.find(({profile}) => {
-      profileId = mentionLink.match(userIdRegex)[0];
+    let profileId = mentionLink.match(userIdRegex)[0];
 
+    const fromUserDirectory = userDirectory.find(({profile}) => {
       return profile.includes(profileId);
     });
+
     if (!fromUserDirectory) {
       return false;
     }
-
     console.log('DIRECTORY MATCH:', profileId, fromUserDirectory);
 
-    const foundUser = notionUsers?.find(({name}) => {
-      if (!name) {
-        console.warn('Notion Users.name was undefined');
+    console.log(`Notion users: ${notionUsers?.length}`);
+
+    const foundUser = notionUsers?.find(user => {
+      //@ts-ignore
+      const {name, person} = user;
+      // console.log('PERSON', person);
+
+      if (!person) {
+        console.warn('Notion did not return a {person} with the User object');
         return false;
       }
-      return fromUserDirectory.name.toUpperCase().includes(name.toUpperCase());
+      // return fromUserDirectory.name.toUpperCase().includes(name.toUpperCase());
+      return (
+        fromUserDirectory.email.toUpperCase() === person.email.toUpperCase()
+      );
     });
+
+    console.log('FINAL MATCH:', profileId, foundUser);
     return foundUser as PersonUser;
   }
 
