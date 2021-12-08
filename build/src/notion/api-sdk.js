@@ -45,12 +45,14 @@ export async function queryWorkspace(text) {
         return;
     }
 }
+let notionUsers = [];
 export async function findMatchingUser(richTextLink, options) {
     const { userDirectory } = options;
     if (!richTextLink) {
         throw new Error('🚨 Please pass a mention object');
     }
-    const notionUsers = await getWorkspaceUsers();
+    const allUsers = notionUsers?.length === 0 ? await getWorkspaceUsers() : notionUsers;
+    notionUsers = allUsers;
     const mentionName = richTextLink?.content;
     const mentionLink = richTextLink?.link.url;
     if (userDirectory && userDirectory.length > 0) {

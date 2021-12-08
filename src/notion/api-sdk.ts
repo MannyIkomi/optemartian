@@ -1,7 +1,7 @@
 import {Client} from '@notionhq/client';
 import path from 'path';
 import dotenv from 'dotenv';
-import {PersonUser} from '.';
+import {PersonUser, User} from '.';
 import {PluginConfig} from '../plugin';
 dotenv.config();
 
@@ -56,12 +56,16 @@ export async function queryWorkspace(text: string) {
   }
 }
 
+let notionUsers = [] as User[] | undefined;
+
 export async function findMatchingUser(richTextLink, options: PluginConfig) {
   const {userDirectory} = options;
   if (!richTextLink) {
     throw new Error('🚨 Please pass a mention object');
   }
-  const notionUsers = await getWorkspaceUsers();
+  const allUsers =
+    notionUsers?.length === 0 ? await getWorkspaceUsers() : notionUsers;
+  notionUsers = allUsers;
 
   const mentionName = richTextLink?.content;
   const mentionLink = richTextLink?.link.url;
