@@ -55,7 +55,7 @@ hello _world_
 });
 
 describe('find matching user', () => {
-  it('gets a notion user', async () => {
+  it('Gets a Notion User - Val', async () => {
     const actual = await notion.findMatchingUser(
       {
         content: 'Val',
@@ -71,4 +71,29 @@ describe('find matching user', () => {
 
     return expect(actual).toStrictEqual(expect.objectContaining(expected));
   }, 30000);
+
+  it('Gets a Notion User - Gregory Bohling', async () => {
+    const actual = await notion.findMatchingUser(
+      {
+        content: 'Gregory Bohling',
+        link: {url: 'https://slab.discord.tools/users/csork6su'},
+      },
+      {linkMatcher: {user: 'slab.discord.tools/users'}}
+    );
+
+    const expected = {
+      type: 'person',
+      name: 'Gregory Bohling',
+    };
+
+    return expect(actual).toStrictEqual(expect.objectContaining(expected));
+  }, 30000);
 });
+
+/*
+
+email: 'greg.bohling@discordapp.com',
+name: 'Gregory Bohling',
+profile: '/users/gregory-bohling-csork6su'
+
+*/
