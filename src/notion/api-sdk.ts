@@ -37,7 +37,7 @@ export async function getWorkspaceUsers() {
       allUsers = allUsers.concat(moreUsers.results);
     } while (more && cursor);
 
-    console.log('✅ Got all users:', allUsers.length, allUsers);
+    console.log(`✅ Got all users: ${allUsers.length}`);
     return Promise.all(allUsers);
   } catch (err) {
     console.error(err);
@@ -56,6 +56,7 @@ export async function queryWorkspace(text: string) {
   }
 }
 
+// cache users list in memory here to prevent multiple API calls
 let notionUsers = [] as User[] | undefined;
 
 export async function findMatchingUser(richTextLink, options: PluginConfig) {
@@ -83,7 +84,6 @@ export async function findMatchingUser(richTextLink, options: PluginConfig) {
     }
 
     console.log('DIRECTORY MATCH:', profileId, fromUserDirectory);
-    console.log(`Notion users: ${notionUsers?.length}`);
 
     const foundUser = notionUsers?.find(user => {
       //@ts-ignore
