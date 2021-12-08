@@ -53,7 +53,7 @@ describe('find matching user', () => {
             type: 'person',
             name: 'Val',
         };
-        expect(actual).toStrictEqual(expect.objectContaining(expected));
-    });
+        return expect(actual).toStrictEqual(expect.objectContaining(expected));
+    }, 60000);
 });
 //# sourceMappingURL=integration.spec.js.map

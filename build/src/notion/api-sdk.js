@@ -4,15 +4,33 @@ import dotenv from 'dotenv';
 dotenv.config();
 const VAL_NOTION_API_KEY = process.env.VAL_NOTION_API_KEY;
 const DISCORD_API_KEY = process.env.DISCORD_API_KEY;
-export const notionClient = new Client({ auth: DISCORD_API_KEY });
+export const notionClient = new Client({
+    auth: DISCORD_API_KEY || VAL_NOTION_API_KEY,
+});
 export async function getWorkspaceUsers() {
     // https://developers.notion.com/reference/get-users
     try {
-        const { results } = await notionClient.users.list();
-        return results;
+        // const currentUsers = users || ([] as User[]);
+        const { results, has_more, next_cursor } = await notionClient.users.list();
+        let allUsers = results;
+        let cursor = next_cursor || undefined;
+        let more = has_more;
+        do {
+            console.log('🔁 Getting more users…', `Currently ${allUsers.length}`);
+            // list needs to be paginated
+            // getWorkspaceUsers again with the cursor
+            const moreUsers = await notionClient.users.list({
+                start_cursor: cursor,
+            });
+            cursor = moreUsers.next_cursor || undefined;
+            more = moreUsers.has_more;
+            allUsers = allUsers.concat(moreUsers.results);
+        } while (more && cursor);
+        console.log('✅ Got all users:', allUsers.length, allUsers);
+        return Promise.all(allUsers);
     }
-    catch (error) {
-        console.error(error);
+    catch (err) {
+        console.error(err);
         return;
     }
 }

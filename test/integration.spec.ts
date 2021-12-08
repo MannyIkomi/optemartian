@@ -69,6 +69,6 @@ describe('find matching user', () => {
       name: 'Val',
     };
 
-    expect(actual).toStrictEqual(expect.objectContaining(expected));
-  });
+    return expect(actual).toStrictEqual(expect.objectContaining(expected));
+  }, 30000);
 });
