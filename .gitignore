@@ -2,3 +2,4 @@
 /.idea/
 .env
 discordteam.csv
+.DS_Store
